@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Add Expense</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <form [formGroup]="expenseForm">
+    <ion-list>
+      <ion-list-header no-lines>Expense Details</ion-list-header>
+      <ion-item>
+        <ion-icon name="ios-cash" color="primary" item-left></ion-icon>
+        <ion-label color="primary" floating>Enter Amount</ion-label>
+        <ion-input formControlName="amount" type="number" min="0"></ion-input>         
+      </ion-item>
+      <ion-item>
+        <ion-icon name="ios-pricetags" color="primary" item-left></ion-icon>
+        <ion-label color="primary" floating>Enter Brief Note</ion-label>
+        <ion-input formControlName="note" type="text"></ion-input>         
+      </ion-item>
+      <ion-list-header no-lines>Other Details</ion-list-header>
+      <ion-item>
+        <ion-icon name="ios-browsers-outline" color="primary" item-left></ion-icon>
+        <ion-label color="primary">Category</ion-label>
+        <ion-select formControlName="category">
+          <ion-option value="mini-expenses" selected="true">Mini Expenses</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="ios-book-outline" color="primary" item-left></ion-icon>
+        <ion-label color="primary">Type</ion-label>
+        <ion-select formControlName="type">
+          <ion-option value="goods" selected="true">Goods</ion-option>
+          <ion-option value="service">Service</ion-option>
+          <ion-option value="payable">Payable</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="ios-card" color="primary" item-left></ion-icon>
+        <ion-label color="primary">Payment Method</ion-label>
+        <ion-select formControlName="paymentMethod">
+          <ion-option value="cash" selected="true">Cash</ion-option>
+          <ion-option value="card">Credit / Debit Card</ion-option>
+          <ion-option value="online-wallet">Online Wallet</ion-option>
+          <ion-option value="others">Others</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="ios-calendar-outline" color="primary" item-left></ion-icon>
+        <ion-label color="primary">Date</ion-label>
+        <ion-datetime formControlName="date" displayFormat="DDDD MMM D, YYYY" pickerFormat="MMM DD YYYY"></ion-datetime>
+      </ion-item>
+      <ion-item-divider no-lines></ion-item-divider>
+      <button ion-button item-right block (click)="saveExpense()">Add</button>
+    </ion-list>
+  </form>
+</ion-content>

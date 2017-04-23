@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>April 12 - May 13</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <ion-item *ngFor="let expense of expenses" (click)="presentOptions()">
+      <ion-avatar item-left>
+        <ng2-letter-avatar [avatar-data]="expense.category" avatar-char-count="2"></ng2-letter-avatar>
+      </ion-avatar>
+      <h2>{{expense.note}}</h2>
+      <p>{{expense.type}} &times; {{expense.paymentMethod}}</p>
+      <h1 item-right>{{expense.amount}}</h1>
+      <!-- <button ion-button item-right round color="primary">Edit</button>
+      <button ion-button item-right round color="danger">Delete</button> -->
+    </ion-item>
+  </ion-list>
+</ion-content>

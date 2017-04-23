@@ -6,10 +6,15 @@
 
 <ion-content padding>
   <ion-list>
-    <ion-item *ngFor="let d of data" (click)="toggleDetails(d)">
-      {{d.title}}
-      <div *ngIf="d.showDetails">{{d.details}}</div>
-      <ion-icon color="primary" item-right [name]="d.icon"></ion-icon>
-    </ion-item>
+    <div *ngFor="let d of data">
+      <ion-item (click)="openWeeklyExpenseList()">
+        <ion-avatar item-left>
+          <ng2-letter-avatar [avatar-data]="d.avatarData"></ng2-letter-avatar>
+        </ion-avatar>
+        <h2>{{d.title}}</h2>
+        <p>{{d.weekRange}}</p>
+        <ion-icon name="ios-arrow-forward" color="primary" item-right></ion-icon>
+      </ion-item>
+    </div>
   </ion-list>
 </ion-content>
