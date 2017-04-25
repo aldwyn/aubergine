@@ -12,7 +12,17 @@ $font-path: "../assets/fonts";
 // To view all the possible Ionic variables, see:
 // http://ionicframework.com/docs/v2/theming/overriding-ionic-variables/
 
+ion-title, {
+    font-family: 'Pacifico';
+}
 
+ion-tab,
+ion-alert,
+.tab-button > .tab-button-text,
+.action-sheet-wrapper,
+.picker-wrapper {
+    font-family: 'Nunito';
+}
 
 
 // Named Color Variables
@@ -84,3 +94,5 @@ $colors: (
 
 @import "roboto";
 @import "noto-sans";
+@import "pacifico";
+@import "nunito";

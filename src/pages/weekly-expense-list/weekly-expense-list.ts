@@ -5,6 +5,7 @@ import {
   ActionSheetController,
   AlertController
 } from 'ionic-angular';
+import moment from 'moment';
 
 import { ExpenseAddNav } from '../expense-add/expense-add';
 import { AubergineService } from '../../services/aubergine.service';
@@ -16,6 +17,7 @@ import { Expense } from '../../models/expense';
 })
 export class WeeklyExpenseListNav {
   expenses: Expense[] = [];
+  headerTitle: string;
 
   constructor(
     public navCtrl: NavController,
@@ -32,6 +34,12 @@ export class WeeklyExpenseListNav {
 
   ionViewWillEnter() {
     this.loadExpenses();
+    let wrKey = this.navParams.get('weekRangeTag');
+    let wrFmt = 'MMM D, YYYY';
+    let wrStr = wrKey.split(':'),
+      startStr = moment(wrStr[0]),
+      endStr = moment(wrStr[1]);
+    this.headerTitle = `${startStr.format(wrFmt)} — ${endStr.format(wrFmt)}`;
   }
 
   loadExpenses() {

@@ -1,19 +1,24 @@
 <ion-header>
   <ion-navbar color="primary">
-    <ion-title>April 12 - May 13</ion-title>
+    <ion-title>{{headerTitle}}</ion-title>
+    <ion-buttons end>
+      <toolbar-chip></toolbar-chip>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
   <ion-list>
-    <ion-item *ngFor="let expense of expenses" (click)="presentOptions(expense)">
-      <ion-avatar item-left>
-        <ng2-letter-avatar [avatar-data]="expense.note == '' ? 'No note provided' : expense.note" avatar-char-count="2"></ng2-letter-avatar>
-      </ion-avatar>
-      <h2>{{ expense.note == '' ? 'No note provided' : expense.note }}</h2>
-      <p>{{aubergineService.categories[expense.category - 1].name}} &#9679; {{aubergineService.paymentMethods[expense.paymentMethod - 1].name}}</p>
-      <h1 item-right>{{expense.amount | number:'1.2-2'}}</h1>
-    </ion-item>
+    <ion-card *ngFor="let expense of expenses" (click)="presentOptions(expense)">
+      <ion-item>
+        <ion-avatar item-left>
+          <ng2-letter-avatar [avatar-data]="expense.note == '' ? 'No note provided' : expense.note" avatar-char-count="2"></ng2-letter-avatar>
+        </ion-avatar>
+        <h2>{{ expense.note == '' ? 'No note provided' : expense.note }}</h2>
+        <p>{{aubergineService.categories[expense.category - 1].name}} &#9679; {{aubergineService.paymentMethods[expense.paymentMethod - 1].name}}</p>
+        <h1 item-right>{{expense.amount | number:'1.2-2'}}</h1>
+      </ion-item>
+    </ion-card>
   </ion-list>
   <ion-fab bottom right>
     <button ion-fab icon-only (click)="addExpense()">

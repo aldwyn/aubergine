@@ -1,12 +1,12 @@
 <ion-header>
   <ion-navbar color="primary">
-    <ion-title>Home</ion-title>
+    <ion-title>Aubergine</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
   <ion-card>
-    <ion-card-content>
+    <ion-card-content color="light">
       <div text-center>
         <p>This week's spending is worth</p>
         <h1 class="spending-total"><span [outerHTML]="aubergineService.currencySigns[25].htmlCode"></span> <span>{{aubergineService.currentWeekTotal | number:'1.2-2'}}</span></h1>
@@ -20,19 +20,18 @@
     </ion-card-content>
   </ion-card>
   <ion-card>
-    <!-- <div [hidden]="!aubergineService.currentWeekChartData.data">
+    <div [hidden]="!aubergineService.currentWeekChartData.data">
+      <img src="../../assets/images/giphy-downsized.gif">
       <ion-card-header>
-        <h1>Get Started!</h1>
+        <h1 class="getting-started-header"><strong>Get Started!</strong></h1>
       </ion-card-header>
       <ion-card-content>
         <p>Add new expenses to see the weekly categorical distribution here.</p>
-        <br>
         <p>This allows you to be aware about the expenses you might or might not want to have in the next weeks.</p>
-        <br>
         <p>Well, who cares to monitor their spendings, right? <strong>Get started if you do!</strong></p>
       </ion-card-content>  
-    </div> -->
-    <div [hidden]="!aubergineService.currentWeekChartData.data">
+    </div>
+    <div [hidden]="aubergineService.currentWeekChartData.data">
       <ion-card-header>
         <p text-center>How much is on this week's plate?</p>
       </ion-card-header>

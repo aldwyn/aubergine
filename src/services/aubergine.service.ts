@@ -125,7 +125,6 @@ export class AubergineService {
         expenseCount: weekRanges[wrKey].length,
       };
     });
-    this.weekRanges;
   }
 
   loadCurrentWeekChartData(expenses) {

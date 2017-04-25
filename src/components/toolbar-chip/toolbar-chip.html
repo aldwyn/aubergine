@@ -1,0 +1,7 @@
+<ion-chip color="light">
+  <ion-icon name="heart" color="danger"></ion-icon>
+  <ion-label color="primary">
+    <span [outerHTML]="aubergineService.currencySigns[25].htmlCode"></span>
+    <span>{{aubergineService.currentWeekTotal | number:'1.2-2'}}</span>
+  </ion-label>
+</ion-chip>
