@@ -1,10 +1,10 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
+import { IonicStorageModule } from '@ionic/storage';
 import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
-import { Ng2LetterAvatar } from '../assets/ng2letteravatar';
+import { Ng2LetterAvatar } from '../assets/lib/ng2letteravatar';
 import { MyApp } from './app.component';
-import 'reflect-metadata';
 
 import { HomePage } from '../pages/home/home';
 import { GraphPage } from '../pages/graph/graph';
@@ -19,6 +19,8 @@ import { TabsPage } from '../pages/tabs/tabs';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { ExpenseService } from '../services/expense.service';
+import { AubergineService } from '../services/aubergine.service';
 
 const cloudSettings: CloudSettings = {
   'core': {
@@ -50,6 +52,7 @@ const customIonicSettings: any = {
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp, customIonicSettings),
+    IonicStorageModule.forRoot(),
     CloudModule.forRoot(cloudSettings),
   ],
   bootstrap: [IonicApp],
@@ -69,6 +72,8 @@ const customIonicSettings: any = {
   providers: [
     StatusBar,
     SplashScreen,
+    // ExpenseService,
+    AubergineService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

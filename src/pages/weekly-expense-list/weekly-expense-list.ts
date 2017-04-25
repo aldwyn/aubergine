@@ -7,7 +7,8 @@ import {
 } from 'ionic-angular';
 
 import { ExpenseAddNav } from '../expense-add/expense-add';
-import { Expense } from '../../app/models/expense';
+import { AubergineService } from '../../services/aubergine.service';
+import { Expense } from '../../models/expense';
 
 @Component({
   selector: 'page-weekly-expense-list',
@@ -21,28 +22,27 @@ export class WeeklyExpenseListNav {
     public navParams: NavParams,
     public actionSheetCtrl: ActionSheetController,
     public alertCtrl: AlertController,
+    public aubergineService: AubergineService,
   ) { }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad WeeklyExpenseList');
-    for(let i = 0; i < 7; i++ ){
-      let expense = new Expense(
-        'Jollibee Dinner',
-        123.45,
-        'Foods & Beverages',
-        'Goods',
-        'Online Wallet',
-        new Date()
-      );
-      this.expenses.push(expense);
-    }
+    
   }
 
-  goBack() {
-    this.navCtrl.pop();
+  ionViewWillEnter() {
+    this.loadExpenses();
   }
 
-  presentOptions() {
+  loadExpenses() {
+    let wrKey = this.navParams.get('weekRangeTag');
+    this.aubergineService.list()
+      .then(res => {
+        this.expenses = res.filter(e => e.weekRangeTag == wrKey);
+      });
+  }
+
+  presentOptions(expense) {
     let parent = this;
     let options = this.actionSheetCtrl.create({
       title: 'Options',
@@ -50,7 +50,7 @@ export class WeeklyExpenseListNav {
         text: 'Edit',
         icon: 'ios-create',
         handler: data => {
-          parent.navCtrl.push(ExpenseAddNav);
+          parent.navCtrl.push(ExpenseAddNav, { expense: expense });
         }
       }, {
         text: 'Delete',
@@ -83,6 +83,10 @@ export class WeeklyExpenseListNav {
       }],
     });
     alert.present();
+  }
+
+  addExpense() {
+    this.navCtrl.push(ExpenseAddNav);
   }
 
 }

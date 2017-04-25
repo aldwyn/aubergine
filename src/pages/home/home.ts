@@ -1,8 +1,12 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Chart } from 'chart.js';
+import hexRgb from 'hex-rgb';
 
+import { Expense } from '../../models/expense';
+import { WeekRange } from '../../models/week-range';
 import { ExpenseAddNav } from '../expense-add/expense-add';
+import { AubergineService } from '../../services/aubergine.service';
 
 @Component({
   selector: 'page-home',
@@ -12,35 +16,44 @@ export class HomePage implements OnInit {
   @ViewChild('weeklyDonutCanvas') weeklyDonutCanvas;
   weeklyDonutChart: any;
 
-  constructor(public navCtrl: NavController) { }
-
-  addExpense() {
-    this.navCtrl.push(ExpenseAddNav);
-  }
+  constructor(
+    public navCtrl: NavController,
+    public aubergineService: AubergineService,
+  ) { }
 
   ngOnInit() {
+    this.aubergineService.reloadChanges()
+      .then(() => this.createDoughnutChart());
+  }
+
+  ionViewWillEnter() {
+     this.createDoughnutChart();
+  }
+
+  createDoughnutChart() {
+    let donutData = this.aubergineService.currentWeekChartData;
+    let dataSum = donutData.data.reduce((a, b) => a + b, 0);
+    let dataPercentages = donutData.data.map(d => Math.round((d / dataSum) * 100));
     this.weeklyDonutChart = new Chart(this.weeklyDonutCanvas.nativeElement, {
       type: 'doughnut',
       data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        labels: donutData.labels,
         datasets: [{
-          label: 'No. of Votes',
-          data: [12, 19, 3, 5, 2, 3],
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.6)',
-            'rgba(54, 162, 235, 0.6)',
-            'rgba(255, 206, 86, 0.6)',
-            'rgba(75, 192, 192, 0.6)',
-            'rgba(153, 102, 255, 0.6)',
-            'rgba(255, 159, 64, 0.6)',
-          ],
-          hoverBackgroundColor: [
-            "#FF6384", "#36A2EB", "#FFCE56",
-            "#FF6384", "#36A2EB", "#FFCE56"
-          ]
+          data: dataPercentages,
+          backgroundColor: donutData.bgColors,
+          hoverBackgroundColor: donutData.hoverBgColors,
         }]
+      },
+      options: {
+        legend: {
+          position: 'bottom'
+        }
       }
     });
+  }
+
+  addExpense() {
+    this.navCtrl.push(ExpenseAddNav);
   }
 
 }

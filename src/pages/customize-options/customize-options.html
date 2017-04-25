@@ -1,25 +1,11 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="primary">
     <ion-title>Customize Options</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
   <ion-list>
-    <ion-list-header no-lines>Types</ion-list-header>
-    <ion-item-sliding *ngFor="let type of types">
-      <ion-item>{{type}}</ion-item>
-      <ion-item-options side="right">
-        <button ion-button color="secondary" (click)="presentEditPrompt(null, type)">
-          <ion-icon name="ios-create"></ion-icon>
-          Edit
-        </button>
-        <button ion-button color="danger" (click)="presentDeletePrompt(null, type)">
-          <ion-icon name="ios-trash"></ion-icon>
-          Delete
-        </button>
-      </ion-item-options>
-    </ion-item-sliding>
     <ion-item-divider no-lines></ion-item-divider>
     <ion-list-header no-lines>Payment Methods</ion-list-header>
     <ion-item-sliding *ngFor="let paymentMethod of paymentMethods">

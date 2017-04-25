@@ -6,7 +6,6 @@ import { NavController, NavParams, AlertController } from 'ionic-angular';
   templateUrl: 'customize-options.html',
 })
 export class CustomizeOptionsNav {
-  types: string[];
   paymentMethods: string[];
   categories: string[];
 
@@ -18,7 +17,6 @@ export class CustomizeOptionsNav {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad CustomizeOptions');
-    this.types = ['Goods', 'Service', 'Payable'];
     this.paymentMethods = ['Cash', 'Credit/Debit Card', 'Online Wallet', 'Others'];
     this.categories = ['Foods & Beverages', 'Mini Expenses', 'Personal & Clothing', 'Leisure'];
   }

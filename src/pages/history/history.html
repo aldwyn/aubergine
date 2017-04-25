@@ -1,20 +1,23 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="primary">
     <ion-title>History</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
   <ion-list>
-    <div *ngFor="let d of data">
-      <ion-item (click)="openWeeklyExpenseList()">
-        <ion-avatar item-left>
-          <ng2-letter-avatar [avatar-data]="d.avatarData"></ng2-letter-avatar>
-        </ion-avatar>
-        <h2>{{d.title}}</h2>
-        <p>{{d.weekRange}}</p>
-        <ion-icon name="ios-arrow-forward" color="primary" item-right></ion-icon>
-      </ion-item>
-    </div>
+    <ion-item *ngFor="let wr of aubergineService.weekRanges" (click)="openWeeklyExpenseList(wr.key)">
+      <ion-avatar item-left>
+        <ng2-letter-avatar avatar-data="$"></ng2-letter-avatar>
+      </ion-avatar>
+      <h2 color="secondary">{{wr.name}}</h2>
+      <p>{{wr.expenseCount}} expenses</p>
+      <h1 item-right>{{wr.sum | number:'1.2-2'}}</h1>
+    </ion-item>
   </ion-list>
+  <ion-fab bottom right>
+    <button ion-fab icon-only (click)="addExpense()">
+      <ion-icon name="pricetags"></ion-icon>
+    </button>
+  </ion-fab>
 </ion-content>
