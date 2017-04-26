@@ -1,10 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Chart } from 'chart.js';
-import hexRgb from 'hex-rgb';
 
-import { Expense } from '../../models/expense';
-import { WeekRange } from '../../models/week-range';
 import { ExpenseAddNav } from '../expense-add/expense-add';
 import { AubergineService } from '../../services/aubergine.service';
 

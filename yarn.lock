@@ -2648,7 +2648,11 @@ lodash.some@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/lodash.some/-/lodash.some-4.6.0.tgz#1bb9f314ef6b8baded13b549169b2a945eb68e4d"
 
-lodash@^4.0.0, lodash@^4.14.0, lodash@^4.2.0:
+lodash@^4.0.0, lodash@^4.2.0:
+  version "4.12.0"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.12.0.tgz#2bd6dc46a040f59e686c972ed21d93dc59053258"
+
+lodash@^4.14.0:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
@@ -2931,7 +2935,7 @@ node-ninja@^1.0.1:
     tar "^2.0.0"
     which "1"
 
-node-pre-gyp@^0.6.29:
+node-pre-gyp@^0.6.29, node-pre-gyp@~0.6.31:
   version "0.6.34"
   resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.6.34.tgz#94ad1c798a11d7fc67381b50d47f8cc18d9799f7"
   dependencies:
@@ -4169,6 +4173,13 @@ spdx-license-ids@^1.0.2:
 sprintf-js@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
+
+sqlite3@^3.1.8:
+  version "3.1.8"
+  resolved "https://registry.yarnpkg.com/sqlite3/-/sqlite3-3.1.8.tgz#4cbcf965d8b901d1b1015cbc7fc415aae157dfaa"
+  dependencies:
+    nan "~2.4.0"
+    node-pre-gyp "~0.6.31"
 
 sshpk@^1.7.0:
   version "1.13.0"

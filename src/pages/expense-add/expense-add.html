@@ -1,45 +1,55 @@
 <ion-header>
   <ion-navbar color="primary">
     <ion-title>{{ expense ? 'Edit' : 'Add' }} Expense</ion-title>
+    <ion-buttons end padding-right>
+      <button ion-button icon-only (click)="saveExpense()">
+        <ion-icon name="send"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <form [formGroup]="expenseForm" (ngSubmit)="saveExpense()">
-    <ion-list>
-      <ion-list-header no-lines>Expense Details</ion-list-header>
-      <ion-item>
-        <ion-icon name="ios-pricetags" color="primary" item-left></ion-icon>
-        <ion-label color="primary" floating>Enter Brief Note</ion-label>
-        <ion-input formControlName="note" type="text"></ion-input>         
-      </ion-item>
-      <ion-item>
-        <ion-icon name="ios-cash" color="primary" item-left></ion-icon>
-        <ion-label color="primary" floating>Enter Amount</ion-label>
-        <ion-input formControlName="amount" type="number" min="0"></ion-input>         
-      </ion-item>
-      <ion-list-header no-lines>Other Details</ion-list-header>
-      <ion-item>
-        <ion-icon name="ios-browsers-outline" color="primary" item-left></ion-icon>
-        <ion-label color="primary">Category</ion-label>
-        <ion-select formControlName="category">
-          <ion-option *ngFor="let c of aubergineService.categories" [value]="c._id" [selected]="c._id == category">{{c.name}}</ion-option>
-        </ion-select>
-      </ion-item>
-      <ion-item>
-        <ion-icon name="ios-card" color="primary" item-left></ion-icon>
-        <ion-label color="primary">Payment Method</ion-label>
-        <ion-select formControlName="paymentMethod">
-          <ion-option *ngFor="let pm of aubergineService.paymentMethods" [value]="pm._id" [selected]="pm._id == paymentMethod">{{pm.name}}</ion-option>
-        </ion-select>
-      </ion-item>
-      <ion-item>
-        <ion-icon name="ios-calendar-outline" color="primary" item-left></ion-icon>
-        <ion-label color="primary">Date</ion-label>
-        <ion-datetime formControlName="date" displayFormat="DDDD MMM D, YYYY" pickerFormat="MMM DD YYYY"></ion-datetime>
-      </ion-item>
+  <form [formGroup]="expenseForm">
+    <ion-card>
+      <ion-card-header>Details</ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-icon name="ios-pricetags" color="primary" item-left></ion-icon>
+          <ion-label color="primary" stacked>Brief Note</ion-label>
+          <ion-input formControlName="note" type="text" placeholder="Type here..."></ion-input>         
+        </ion-item>
+        <ion-item>
+          <ion-icon name="ios-cash" color="primary" item-left></ion-icon>
+          <ion-label color="primary" stacked>Amount</ion-label>
+          <ion-input formControlName="amount" type="number" min="0" clearOnEdit="true" placeholder="Type here..."></ion-input>
+        </ion-item>
+      </ion-card-content>
       <ion-item-divider no-lines></ion-item-divider>
-      <button ion-button item-right block type="submit">Submit</button>
-    </ion-list>
+    </ion-card>
+    <ion-card>
+      <ion-card-header>Other Details</ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-icon name="ios-browsers-outline" color="primary" item-left></ion-icon>
+          <ion-label color="primary">Category</ion-label>
+          <ion-select formControlName="category">
+            <ion-option *ngFor="let c of aubergineService.categories" [value]="c._id" [selected]="c._id == category">{{c.name}}</ion-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="ios-card" color="primary" item-left></ion-icon>
+          <ion-label color="primary">Payment Method</ion-label>
+          <ion-select formControlName="paymentMethod">
+            <ion-option *ngFor="let pm of aubergineService.paymentMethods" [value]="pm._id" [selected]="pm._id == paymentMethod">{{pm.name}}</ion-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="ios-calendar-outline" color="primary" item-left></ion-icon>
+          <ion-label color="primary">Date</ion-label>
+          <ion-datetime formControlName="date" displayFormat="DDDD MMM D, YYYY" pickerFormat="MMM DD YYYY"></ion-datetime>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
   </form>
 </ion-content>

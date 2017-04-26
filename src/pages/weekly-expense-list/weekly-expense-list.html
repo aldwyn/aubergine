@@ -16,7 +16,7 @@
         </ion-avatar>
         <h2>{{ expense.note == '' ? 'No note provided' : expense.note }}</h2>
         <p>{{aubergineService.categories[expense.category - 1].name}} &#9679; {{aubergineService.paymentMethods[expense.paymentMethod - 1].name}}</p>
-        <h1 item-right>{{expense.amount | number:'1.2-2'}}</h1>
+        <h1 item-right class="list-price">{{expense.amount | number:'1.2-2'}}</h1>
       </ion-item>
     </ion-card>
   </ion-list>

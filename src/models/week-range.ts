@@ -7,4 +7,12 @@ export class WeekRange {
     let endDate = moment(startDate).add(6, 'days');
     return `${startDate.format(dateFmt)}:${endDate.format(dateFmt)}`;
   }
-} 
+
+  static get(date) {
+    let fmt = 'MMM D, YYYY';
+    let start = moment(date).subtract(date.getDay(), 'days');
+    let end = moment(start).add(6, 'days');
+    let name = `${start.format(fmt)} — ${end.format(fmt)}`;
+    return { name: name, start: start, end: end };
+  }
+}

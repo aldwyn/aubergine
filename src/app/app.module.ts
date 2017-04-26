@@ -26,7 +26,6 @@ import { ToolbarChip } from '../components/toolbar-chip/toolbar-chip';
 // Services
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { ExpenseService } from '../services/expense.service';
 import { AubergineService } from '../services/aubergine.service';
 
 const cloudSettings: CloudSettings = {
