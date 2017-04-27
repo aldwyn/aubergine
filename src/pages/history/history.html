@@ -8,6 +8,9 @@
 </ion-header>
 
 <ion-content padding>
+  <ion-refresher (ionRefresh)="aubergineService.refreshApp($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <ion-list>
     <ion-card *ngFor="let wr of aubergineService.weekRanges" (click)="openWeeklyExpenseList(wr.key)">
       <ion-item>

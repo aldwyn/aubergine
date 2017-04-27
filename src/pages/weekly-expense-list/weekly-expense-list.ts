@@ -32,7 +32,7 @@ export class WeeklyExpenseListNav {
 
   ionViewWillEnter() {
     let wrKey = this.navParams.get('weekRangeTag');
-    let wrFmt = 'MMM D, YYYY';
+    let wrFmt = 'MMM D';
     let wrStr = wrKey.split(':'),
       startStr = moment(wrStr[0]),
       endStr = moment(wrStr[1]);

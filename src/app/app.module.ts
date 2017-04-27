@@ -8,13 +8,13 @@ import { MyApp } from './app.component';
 
 // Pages
 import { HomePage } from '../pages/home/home';
-import { GraphPage } from '../pages/graph/graph';
 import { HistoryPage } from '../pages/history/history';
 import { SettingsPage } from '../pages/settings/settings';
 import { TabsPage } from '../pages/tabs/tabs';
 
 // Navs
 import { ExpenseAddNav } from '../pages/expense-add/expense-add';
+import { GraphPageNav } from '../pages/graph/graph';
 import { WeeklyExpenseListNav } from '../pages/weekly-expense-list/weekly-expense-list';
 import { CustomizeOptionsNav } from '../pages/customize-options/customize-options';
 import { SendFeedbackNav } from '../pages/send-feedback/send-feedback';
@@ -45,10 +45,10 @@ const customIonicSettings: any = {
     Ng2LetterAvatar,
     MyApp,
     HomePage,
-    GraphPage,
     HistoryPage,
     SettingsPage,
     ExpenseAddNav,
+    GraphPageNav,
     WeeklyExpenseListNav,
     CustomizeOptionsNav,
     SendFeedbackNav,
@@ -66,10 +66,10 @@ const customIonicSettings: any = {
   entryComponents: [
     MyApp,
     HomePage,
-    GraphPage,
     HistoryPage,
     SettingsPage,
     ExpenseAddNav,
+    GraphPageNav,
     WeeklyExpenseListNav,
     CustomizeOptionsNav,
     SendFeedbackNav,

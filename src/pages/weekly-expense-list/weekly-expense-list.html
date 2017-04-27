@@ -8,6 +8,9 @@
 </ion-header>
 
 <ion-content padding>
+  <ion-refresher (ionRefresh)="aubergineService.refreshApp($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <ion-list *ngFor="let dg of aubergineService.dailyGroups">
     <ion-item-divider>{{dg.name}}</ion-item-divider>
     <ion-card *ngFor="let expense of dg.expenses" (click)="goToExpenseDetails(expense)">

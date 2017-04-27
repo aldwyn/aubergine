@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import PouchDB from 'pouchdb';
 import pounchdbFind from 'pouchdb-find';
 import relationalPouch from 'relational-pouch';
-// import cordovaSqlitePlugin from 'pouchdb-adapter-cordova-sqlite';
 import moment from 'moment';
 import hexRgb from 'hex-rgb';
 
@@ -39,8 +38,7 @@ export class AubergineService {
     hoverBgColors: [],
   };;
 
-  initDB() {
-    // PouchDB.plugin(cordovaSqlitePlugin);
+  initDatabase() {
     PouchDB.plugin(relationalPouch);
     PouchDB.plugin(pounchdbFind);
     window['PouchDB'] = PouchDB;
@@ -94,6 +92,11 @@ export class AubergineService {
       .then(res => console.log(res));
   }
 
+  refreshApp(refresher) {
+    this.reloadChanges()
+      .then(() => refresher.complete());
+  }
+
   reloadChanges() {
     return this.list()
       .then(expenses => {
@@ -104,11 +107,13 @@ export class AubergineService {
           expense.updatedAt = new Date(expense.updatedAt);
           return expense;
         });
-        this.currentWeekExpenses = this.expenses.filter(e => e.weekRangeTag == wrKey);
-        this.currentWeekTotal = this.currentWeekExpenses.map(e => e.amount).reduce((a, b) => a + b, 0);
+
+        this.currentWeekTotal = this.expenses.map(e => e.amount).reduce((a, b) => a + b, 0);
         this.loadWeekRanges();
-        this.loadCurrentWeekChartData();
-        this.dailyGroups = this.loadWeekExpenses(this.currentWeekExpenses);
+
+        let currentWeekExpenses = this.expenses.filter(e => e.weekRangeTag == wrKey);
+        this.loadCurrentWeekChartData(currentWeekExpenses);
+        this.dailyGroups = this.loadWeekExpenses(currentWeekExpenses);
       });
   }
 
@@ -152,9 +157,9 @@ export class AubergineService {
       .reverse();
   }
 
-  loadCurrentWeekChartData() {
+  loadCurrentWeekChartData(weekExpenses) {
     let categoryDict = {};
-    this.currentWeekExpenses.map(e => {
+    weekExpenses.map(e => {
       if (e.category in categoryDict) {
         categoryDict[e.category] += e.amount;
       } else {

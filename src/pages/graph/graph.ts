@@ -2,18 +2,56 @@ import { Component, ViewChild } from '@angular/core';
 import { NavController, NavParams, Slides } from 'ionic-angular';
 import { Chart } from 'chart.js';
 
+import { WeekRange } from '../../models/week-range';
+import { AubergineService } from '../../services/aubergine.service';
+import { WeeklyExpenseListNav } from '../../pages/weekly-expense-list/weekly-expense-list';
+
 @Component({
   selector: 'page-graph',
   templateUrl: 'graph.html',
 })
-export class GraphPage {
+export class GraphPageNav {
   @ViewChild(Slides) slides: Slides;
   @ViewChild('weeklyDonutCanvas') weeklyDonutCanvas;
   @ViewChild('monthlyDonutCanvas') monthlyDonutCanvas;
   weeklyDonutChart: any;
   monthlyDonutChart: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    public aubergineService: AubergineService) {
+  }
+
+  ionViewWillEnter() {
+    this.createDoughnutChart();
+  }
+
+  openWeeklyExpenseList() {
+    let weekRangeTag = WeekRange.getWeekRangeKey(new Date());
+    this.navCtrl.push(WeeklyExpenseListNav, { weekRangeTag: weekRangeTag });
+  }
+
+  createDoughnutChart() {
+    let donutData = this.aubergineService.currentWeekChartData;
+    let dataSum = donutData.data.reduce((a, b) => a + b, 0);
+    let dataPercentages = donutData.data.map(d => Math.round((d / dataSum) * 100));
+    this.weeklyDonutChart = new Chart(this.weeklyDonutCanvas.nativeElement, {
+      type: 'doughnut',
+      data: {
+        labels: donutData.labels,
+        datasets: [{
+          data: dataPercentages,
+          backgroundColor: donutData.bgColors,
+          hoverBackgroundColor: donutData.hoverBgColors,
+        }]
+      },
+      options: {
+        legend: {
+          position: 'bottom'
+        }
+      }
+    });
   }
 
   ionViewDidLoad() {

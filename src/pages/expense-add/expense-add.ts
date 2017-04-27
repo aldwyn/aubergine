@@ -57,7 +57,12 @@ export class ExpenseAddNav {
     let formCtrl = this.expenseForm.controls;
     if (parseFloat(formCtrl.amount.value) <= 0) {
       this.alertCtrl.create({
-        message: 'The amount should be at least 0.',
+        message: 'The amount must be at least 0.',
+        buttons: ['Dismiss'],
+      }).present();
+    } else if ((new Date(formCtrl.date.value)) > (new Date())) {
+      this.alertCtrl.create({
+        message: 'The date must be not beyond today.',
         buttons: ['Dismiss'],
       }).present();
     } else {
