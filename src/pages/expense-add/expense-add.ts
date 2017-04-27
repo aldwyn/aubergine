@@ -3,8 +3,9 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import {
   NavController,
   NavParams,
+  AlertController,
+  ToastController,
   LoadingController,
-  ToastController
 } from 'ionic-angular';
 
 import { AubergineService } from '../../services/aubergine.service';
@@ -22,6 +23,7 @@ export class ExpenseAddNav {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    public alertCtrl: AlertController,
     public loadingCtrl: LoadingController,
     public formBuilder: FormBuilder,
     public aubergineService: AubergineService,
@@ -52,35 +54,61 @@ export class ExpenseAddNav {
   }
 
   saveExpense() {
-    let expense = new Expense(
-      this.expenseForm.controls['note'].value,
-      parseFloat(this.expenseForm.controls['amount'].value),
-      this.expenseForm.controls['category'].value,
-      this.expenseForm.controls['paymentMethod'].value,
-      new Date(this.expenseForm.controls['date'].value),
-    );
-
-    if (this.expense) {
-      expense.id = this.expense.id;
-      expense.rev = this.expense.rev;
-      this.aubergineService.update(expense)
-        .then(this.afterSave.bind(this))
-        .catch(console.error.bind(console));
+    let formCtrl = this.expenseForm.controls;
+    if (parseFloat(formCtrl.amount.value) <= 0) {
+      this.alertCtrl.create({
+        message: 'The amount should be at least 0.',
+        buttons: ['Dismiss'],
+      }).present();
     } else {
-      this.aubergineService.insert(expense)
-        .then(this.afterSave.bind(this))
+      let expense = new Expense(
+        formCtrl.note.value,
+        parseFloat(formCtrl.amount.value),
+        formCtrl.category.value,
+        formCtrl.paymentMethod.value,
+        new Date(formCtrl.date.value),
+      );
+
+      if (this.expense) {
+        expense.id = this.expense.id;
+        expense.rev = this.expense.rev;
+      }
+
+      this.aubergineService.upsert(expense)
+        .then(() => {
+          this.navCtrl.pop();
+          this.toastCtrl.create({
+            message: 'Saved successfully.',
+            duration: 3000,
+            showCloseButton: true,
+          }).present();
+        })
         .catch(console.error.bind(console));
     }
   }
 
-  afterSave(res) {
-    this.navCtrl.pop();
-    let toast = this.toastCtrl.create({
-      message: 'Saved successfully.',
-      duration: 3000,
-      showCloseButton: true,
-    });
-    toast.present();
+  presentDeletePrompt() {
+    this.alertCtrl.create({
+      title: 'Delete Entry',
+      message: 'Are you sure you want to proceed anyway?',
+      buttons: [{
+        text: 'No',
+        role: 'cancel',
+      }, {
+        text: 'Yes',
+        handler: data => {
+          this.aubergineService.delete(this.expense);
+          let loading = this.loadingCtrl.create({
+            content: 'Please wait while the deletion is on process...',
+            duration: 1500,
+          })
+          loading.onDidDismiss(() => {
+            this.navCtrl.pop();
+          });
+          loading.present();
+        }
+      }],
+    }).present();
   }
 
 }

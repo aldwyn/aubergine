@@ -1,4 +1,4 @@
-import { PaymentMethod } from '../../models/paymentMethod';
+import { PaymentMethod } from '../../models/payment-method';
 
 export const PAYMENT_METHODS: PaymentMethod[] = [
   {

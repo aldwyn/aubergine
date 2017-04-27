@@ -19,7 +19,7 @@ export class HistoryPage {
   ) { }
 
   openWeeklyExpenseList(weekRangeTag) {
-    this.navCtrl.push(WeeklyExpenseListNav, { weekRangeTag: weekRangeTag});
+    this.navCtrl.push(WeeklyExpenseListNav, { weekRangeTag: weekRangeTag });
   }
 
   addExpense() {

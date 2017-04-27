@@ -2,6 +2,9 @@
   <ion-navbar color="primary">
     <ion-title>{{ expense ? 'Edit' : 'Add' }} Expense</ion-title>
     <ion-buttons end padding-right>
+      <button [hidden]="!expense" ion-button icon-only margin-right (click)="presentDeletePrompt()">
+        <ion-icon name="trash"></ion-icon>
+      </button>
       <button ion-button icon-only (click)="saveExpense()">
         <ion-icon name="send"></ion-icon>
       </button>
@@ -22,7 +25,7 @@
         <ion-item>
           <ion-icon name="ios-cash" color="primary" item-left></ion-icon>
           <ion-label color="primary" stacked>Amount</ion-label>
-          <ion-input formControlName="amount" type="number" min="0" clearOnEdit="true" placeholder="Type here..."></ion-input>
+          <ion-input class="amount-input" formControlName="amount" type="number" min="0" clearOnEdit="true" placeholder="0.00"></ion-input>
         </ion-item>
       </ion-card-content>
       <ion-item-divider no-lines></ion-item-divider>

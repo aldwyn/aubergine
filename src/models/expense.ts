@@ -2,8 +2,8 @@ import { WeekRange } from './week-range';
 
 export class Expense {
   id: string;
-  dateCreated: Date;
-  dateModified: Date;
+  createdAt: Date;
+  updatedAt: Date;
   weekRangeTag: string;
   rev: string;
 
@@ -14,7 +14,7 @@ export class Expense {
     public paymentMethod: number,
     public date: Date,
   ) {
-    this.dateCreated = this.dateModified = new Date();
+    this.createdAt = this.updatedAt = new Date();
     this.weekRangeTag = WeekRange.getWeekRangeKey(date);
   }
 }

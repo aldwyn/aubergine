@@ -2,23 +2,24 @@ import { Injectable } from '@angular/core';
 import PouchDB from 'pouchdb';
 import pounchdbFind from 'pouchdb-find';
 import relationalPouch from 'relational-pouch';
-import cordovaSqlitePlugin from 'pouchdb-adapter-cordova-sqlite';
+// import cordovaSqlitePlugin from 'pouchdb-adapter-cordova-sqlite';
 import moment from 'moment';
 import hexRgb from 'hex-rgb';
 
 import { schemas } from '../schemas/aubergine.schemas';
 import { CATEGORIES } from '../assets/fixtures/categories.db-fixtures';
-import { CURRENCY_SIGNS } from '../assets/fixtures/currency-signs.db-fixtures';
 import { PAYMENT_METHODS } from '../assets/fixtures/payment-methods.db-fixtures';
+import { CURRENCY_SYMBOLS } from '../assets/fixtures/currency-symbols.db-fixtures';
 
 import { Expense } from '../models/expense';
 import { Category } from '../models/category';
-import { PaymentMethod } from '../models/paymentMethod';
+import { PaymentMethod } from '../models/payment-method';
 import { WeekRange } from '../models/week-range';
 
 @Injectable()
 export class AubergineService {
   private _db;
+  expenses: Expense[] = [];
   currencySigns: any[];
   categories: Category[];
   paymentMethods: PaymentMethod[];
@@ -28,6 +29,7 @@ export class AubergineService {
   wrFmt: string = 'MMM D'
   
   // Home trackers
+  dailyGroups: any[] = [];
   currentWeekExpenses: Expense[] = [];
   currentWeekTotal: number = 0;
   currentWeekChartData: any = {
@@ -38,15 +40,15 @@ export class AubergineService {
   };;
 
   initDB() {
-    PouchDB.plugin(cordovaSqlitePlugin);
+    // PouchDB.plugin(cordovaSqlitePlugin);
     PouchDB.plugin(relationalPouch);
     PouchDB.plugin(pounchdbFind);
     window['PouchDB'] = PouchDB;
-    this._db = new PouchDB('aubergine.db');
+    this._db = new PouchDB('aubergine.db', { adapter: 'websql' });
     this._db.setSchema(schemas);
     this.categories = CATEGORIES;
-    this.currencySigns = CURRENCY_SIGNS;
     this.paymentMethods = PAYMENT_METHODS;
+    this.currencySigns = CURRENCY_SYMBOLS;
     this.initFixtures();
     this.listenToChanges();
   }
@@ -82,52 +84,75 @@ export class AubergineService {
       .then(res => (res.expenses as Expense[])[0]);
   }
 
-  insert(expense) {
+  upsert(expense) {
     return this._db.rel.save('expense', expense)
       .then(res => (res.expenses as Expense[])[0]);
   }
 
-  update(expense) {
-    // this time, it should include a non-null rev and _id
-    return this._db.rel.save('expense', expense)
-      .then(res => (res.expenses as Expense[])[0]);
+  delete(expense) {
+    return this._db.rel.del('expense', expense)
+      .then(res => console.log(res));
   }
 
   reloadChanges() {
     return this.list()
       .then(expenses => {
         let wrKey = WeekRange.getWeekRangeKey(new Date());
-        this.currentWeekExpenses = expenses.filter(e => e.weekRangeTag == wrKey);
+        this.expenses = expenses.map((expense: Expense) => {
+          expense.date = new Date(expense.date);
+          expense.createdAt = new Date(expense.createdAt);
+          expense.updatedAt = new Date(expense.updatedAt);
+          return expense;
+        });
+        this.currentWeekExpenses = this.expenses.filter(e => e.weekRangeTag == wrKey);
         this.currentWeekTotal = this.currentWeekExpenses.map(e => e.amount).reduce((a, b) => a + b, 0);
-        this.loadWeekRanges(expenses);
-        this.loadCurrentWeekChartData(expenses);
+        this.loadWeekRanges();
+        this.loadCurrentWeekChartData();
+        this.dailyGroups = this.loadWeekExpenses(this.currentWeekExpenses);
       });
   }
 
-  loadWeekRanges(expenses) {
+  loadWeekRanges() {
     let weekRanges = {};
-    expenses.map(expense => {
-      let key = WeekRange.getWeekRangeKey(expense.date);
+    this.expenses.map(expense => {
+      let key = expense.weekRangeTag;
       if (key in weekRanges) {
-        weekRanges[key].push(expense);
+        weekRanges[key].sum += expense.amount;
+        weekRanges[key].expenseCount += 1;
       } else {
-        weekRanges[key] = [expense];
+        let wrStr = key.split(':'),
+          startStr = moment(wrStr[0]),
+          endStr = moment(wrStr[1]);
+        weekRanges[key] = {
+          key: key,
+          name: `${startStr.format(this.wrFmt)} — ${endStr.format(this.wrFmt)}`,
+          sum: expense.amount,
+          expenseCount: 1,
+        }
       }
     });
-    this.weekRanges = Object.keys(weekRanges).map(wrKey => {
-      let wrStr = wrKey.split(':'),
-        startStr = moment(wrStr[0]),
-        endStr = moment(wrStr[1]);
-      return {
-        key: wrKey,
-        name: `${startStr.format(this.wrFmt)} — ${endStr.format(this.wrFmt)}`,
-        sum: weekRanges[wrKey].map(e => e.amount).reduce((a, b) => (a + b), 0),
-        expenseCount: weekRanges[wrKey].length,
-      };
-    });
+    this.weekRanges = Object.keys(weekRanges).map(k => weekRanges[k]);
   }
 
-  loadCurrentWeekChartData(expenses) {
+  loadWeekExpenses(weekExpenses) {
+    let dailyGroups = {};
+    weekExpenses.map(e => {
+      let currDate = moment(e.date);
+      if (currDate.day() in dailyGroups) {
+        dailyGroups[currDate.day()].expenses.push(e);
+      } else {
+        dailyGroups[currDate.day()] = {
+          name: currDate.format('dddd'),
+          expenses: [e]
+        };
+      }
+    });
+    return Object.keys(dailyGroups)
+      .map(k => dailyGroups[k])
+      .reverse();
+  }
+
+  loadCurrentWeekChartData() {
     let categoryDict = {};
     this.currentWeekExpenses.map(e => {
       if (e.category in categoryDict) {
@@ -151,19 +176,5 @@ export class AubergineService {
       this.currentWeekChartData.hoverBgColors.push(`rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.75)`);
     }
   }
-
-  // loadExpensesAtWeekRange(weekRangeTag) {
-  //   return this._db.createIndex({
-  //      index: {
-  //        fields: ['weekRangeTag'],
-  //        name: 'weekRangeTagIndex',
-  //      }
-  //   }).then((res) => {
-  //     console.log(weekRangeTag);
-  //     return this._db.find({
-  //       selector: { weekRangeTag: weekRangeTag },
-  //     });
-  //   });
-  // }
 
 }

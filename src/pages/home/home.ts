@@ -3,7 +3,9 @@ import { NavController } from 'ionic-angular';
 import { Chart } from 'chart.js';
 
 import { ExpenseAddNav } from '../expense-add/expense-add';
+import { WeeklyExpenseListNav } from '../weekly-expense-list/weekly-expense-list';
 import { AubergineService } from '../../services/aubergine.service';
+import { WeekRange } from '../../models/week-range';
 
 @Component({
   selector: 'page-home',
@@ -23,8 +25,9 @@ export class HomePage implements OnInit {
       .then(() => this.createDoughnutChart());
   }
 
-  ionViewWillEnter() {
-     this.createDoughnutChart();
+  openWeeklyExpenseList() {
+    let weekRangeTag = WeekRange.getWeekRangeKey(new Date());
+    this.navCtrl.push(WeeklyExpenseListNav, { weekRangeTag: weekRangeTag });
   }
 
   createDoughnutChart() {

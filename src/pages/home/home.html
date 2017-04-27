@@ -13,17 +13,17 @@
       </div>
       <div text-center>
         <ion-chip>
-          <ion-icon name="heart" color="danger"></ion-icon>
+          <ion-icon name="heart" color="secondary"></ion-icon>
           <ion-label>Still on average</ion-label>
         </ion-chip>
       </div>
     </ion-card-content>
   </ion-card>
-  <ion-card>
-    <div [hidden]="!aubergineService.currentWeekChartData.data">
+  <ion-card (dblclick)="openWeeklyExpenseList()">
+    <div [hidden]="aubergineService.currentWeekTotal">
       <img src="assets/images/giphy-downsized.gif">
       <ion-card-header>
-        <h1 class="getting-started-header"><strong>Get Started!</strong></h1>
+        <h1 class="getting-started-header">Get Started!</h1>
       </ion-card-header>
       <ion-card-content>
         <p>Add new expenses to see the weekly categorical distribution here.</p>
@@ -31,7 +31,7 @@
         <p>Well, who cares to monitor their spendings, right? <strong>Get started if you do!</strong></p>
       </ion-card-content>  
     </div>
-    <div [hidden]="aubergineService.currentWeekChartData.data">
+    <div [hidden]="!aubergineService.currentWeekTotal">
       <ion-card-header>
         <p text-center>How much is on this week's plate?</p>
       </ion-card-header>
@@ -41,7 +41,7 @@
     </div>
   </ion-card>
   <ion-fab bottom right>
-    <button ion-fab icon-only (click)="addExpense()">
+    <button ion-fab icon-only color="secondary" (click)="addExpense()">
       <ion-icon name="pricetags"></ion-icon>
     </button>
   </ion-fab>

@@ -8,21 +8,25 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-list>
-    <ion-card *ngFor="let expense of expenses" (click)="presentOptions(expense)">
+  <ion-list *ngFor="let dg of aubergineService.dailyGroups">
+    <ion-item-divider>{{dg.name}}</ion-item-divider>
+    <ion-card *ngFor="let expense of dg.expenses" (click)="goToExpenseDetails(expense)">
       <ion-item>
         <ion-avatar item-left>
-          <ng2-letter-avatar [avatar-data]="expense.note == '' ? 'No note provided' : expense.note" avatar-char-count="2"></ng2-letter-avatar>
+          <ng2-letter-avatar [avatar-data]="expense.note == '' ? '??' : expense.note" avatar-char-count="2"></ng2-letter-avatar>
         </ion-avatar>
-        <h2>{{ expense.note == '' ? 'No note provided' : expense.note }}</h2>
+        <h2>
+          <span [hidden]="expense.note == ''">{{expense.note}}</span>
+          <span [hidden]="expense.note != ''"><em>No note provided</em></span>
+        </h2>
         <p>{{aubergineService.categories[expense.category - 1].name}} &#9679; {{aubergineService.paymentMethods[expense.paymentMethod - 1].name}}</p>
         <h1 item-right class="list-price">{{expense.amount | number:'1.2-2'}}</h1>
       </ion-item>
     </ion-card>
   </ion-list>
   <ion-fab bottom right>
-    <button ion-fab icon-only (click)="addExpense()">
-      <ion-icon name="pricetags"></ion-icon>
+    <button ion-fab icon-only color="secondary" (click)="addExpense()">
+      <ion-icon name="pie"></ion-icon>
     </button>
   </ion-fab>
 </ion-content>

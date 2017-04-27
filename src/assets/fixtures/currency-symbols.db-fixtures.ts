@@ -1,4 +1,4 @@
-export const CURRENCY_SIGNS: any[] = [
+export const CURRENCY_SYMBOLS: any[] = [
   {
     _id: 1,
     "name": "Dollar Sign",
