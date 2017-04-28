@@ -23,16 +23,12 @@ export class ExpenseAddNav {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    public formBuilder: FormBuilder,
+    public toastCtrl: ToastController,
     public alertCtrl: AlertController,
     public loadingCtrl: LoadingController,
-    public formBuilder: FormBuilder,
     public aubergineService: AubergineService,
-    public toastCtrl: ToastController,
   ) { }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad ExpenseAdd');
-  }
 
   ngOnInit() {
     this.expense = this.navParams.get('expense');
@@ -53,7 +49,7 @@ export class ExpenseAddNav {
     });
   }
 
-  saveExpense() {
+  validateAndSaveExpense() {
     let formCtrl = this.expenseForm.controls;
     if (parseFloat(formCtrl.amount.value) <= 0) {
       this.alertCtrl.create({
@@ -66,30 +62,34 @@ export class ExpenseAddNav {
         buttons: ['Dismiss'],
       }).present();
     } else {
-      let expense = new Expense(
-        formCtrl.note.value,
-        parseFloat(formCtrl.amount.value),
-        formCtrl.category.value,
-        formCtrl.paymentMethod.value,
-        new Date(formCtrl.date.value),
-      );
-
-      if (this.expense) {
-        expense.id = this.expense.id;
-        expense.rev = this.expense.rev;
-      }
-
-      this.aubergineService.upsert(expense)
-        .then(() => {
-          this.navCtrl.pop();
-          this.toastCtrl.create({
-            message: 'Saved successfully.',
-            duration: 3000,
-            showCloseButton: true,
-          }).present();
-        })
-        .catch(console.error.bind(console));
+      this.saveExpense(formCtrl);
     }
+  }
+
+  private async saveExpense(formCtrl) {
+    let expense = new Expense(
+      formCtrl.note.value,
+      parseFloat(formCtrl.amount.value),
+      formCtrl.category.value,
+      formCtrl.paymentMethod.value,
+      new Date(formCtrl.date.value),
+    );
+    if (this.expense) {
+      expense.id = this.expense.id;
+      expense.rev = this.expense.rev;
+    }
+    let loading = this.loadingCtrl.create({
+      content: 'Saving...',
+    });
+    loading.present();
+    await this.aubergineService.upsert(expense);
+    loading.dismiss();
+    this.navCtrl.pop();
+    this.toastCtrl.create({
+      message: 'Saved successfully.',
+      duration: 3000,
+      showCloseButton: true,
+    }).present();
   }
 
   presentDeletePrompt() {

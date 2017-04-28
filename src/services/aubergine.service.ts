@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
+import { Storage } from '@ionic/storage';
 import PouchDB from 'pouchdb';
 import pounchdbFind from 'pouchdb-find';
 import relationalPouch from 'relational-pouch';
 import moment from 'moment';
-import hexRgb from 'hex-rgb';
 
 import { schemas } from '../schemas/aubergine.schemas';
+import { AppSettings } from '../app/app.settings';
 import { CATEGORIES } from '../assets/fixtures/categories.db-fixtures';
 import { PAYMENT_METHODS } from '../assets/fixtures/payment-methods.db-fixtures';
 import { CURRENCY_SYMBOLS } from '../assets/fixtures/currency-symbols.db-fixtures';
@@ -18,13 +19,13 @@ import { WeekRange } from '../models/week-range';
 @Injectable()
 export class AubergineService {
   private _db;
+  settings: AppSettings;
   expenses: Expense[] = [];
   currencySigns: any[];
   categories: Category[];
   paymentMethods: PaymentMethod[];
 
   weekRanges: any[];
-  wrFmt: string = 'MMM D';
   weeklyBudget: number;
 
   // Home trackers
@@ -36,27 +37,67 @@ export class AubergineService {
     data: [],
     bgColors: [],
     hoverBgColors: [],
-  };;
+  };
 
-  initDatabase() {
+  constructor(public storage: Storage) {
     PouchDB.plugin(relationalPouch);
     PouchDB.plugin(pounchdbFind);
     window['PouchDB'] = PouchDB;
     this._db = new PouchDB('aubergine.db', { adapter: 'websql' });
     this._db.setSchema(schemas);
+    this.settings = new AppSettings();
     this.categories = CATEGORIES;
     this.paymentMethods = PAYMENT_METHODS;
     this.currencySigns = CURRENCY_SYMBOLS;
-    this.weeklyBudget = 2000;
-    this.initFixtures();
     this.listenToChanges();
+    this.initFixtures();
+    this.initStorage();
   }
+
+  initDatabase() {
+  }
+
+  async initStorage() {
+    await this.storage.ready();
+    let res = await this.storage.get('weeklyBudget');
+    if (!res) {
+      this.storage.set('weeklyBudget', this.settings.weeklyBudget);
+    } else {
+      this.settings.weeklyBudget = res;
+    }
+  }
+
+  // private saveSettings() {
+  //   this.storage.ready().then(() => {
+  //     this._db.rel.find('category').then(res => {
+  //       console.log(res);
+  //       if (!res.categories) {
+  //         CATEGORIES.map(category => {
+  //           this._db.rel.save('category', category)
+  //             .then(r => {
+  //               if (r.categories[0].name == this.settings.category) {
+  //                 this.settings.category
+  //               }
+  //             });
+  //         });
+  //       }
+  //     });
+  //   });
+  // }
 
   private initFixtures() {
     // add categories if not yet in db
     this._db.rel.find('category').then(res => {
       if (!res.categories) {
-        CATEGORIES.map(category => this._db.rel.save('category', category));
+        console.log(res);
+        CATEGORIES.map(category => {
+          this._db.rel.save('category', category)
+            .then(r => {
+              // if (r.categories[0].name == ) {
+
+              // }
+            });
+        });
       }
     });
     
@@ -66,6 +107,13 @@ export class AubergineService {
         PAYMENT_METHODS.map(pm => this._db.rel.save('paymentMethod', pm));
       }
     });
+
+    // add currency symbols if not yet in db
+    this._db.rel.find('currencySymbol').then(res => {
+      if (!res.currencySymbols) {
+        CURRENCY_SYMBOLS.map(cs => this._db.rel.save('currencySymbol', cs));
+      }
+    });
   }
 
   private listenToChanges() {
@@ -73,51 +121,43 @@ export class AubergineService {
       .on('change', (change) => this.reloadChanges());
   }
 
-  list() {
-    return this._db.rel.find('expense')
-      .then(res => res.expenses as Expense[]);
+  async list() {
+    let res = await this._db.rel.find('expense');
+    return res.expenses as Expense[];
   }
 
-  retrieve(id) {
-    return this._db.rel.find('expense', id)
-      .then(res => (res.expenses as Expense[])[0]);
+  async upsert(expense) {
+    await this._db.rel.save('expense', expense);
   }
 
-  upsert(expense) {
-    return this._db.rel.save('expense', expense)
-      .then(res => (res.expenses as Expense[])[0]);
+  async delete(expense) {
+    await this._db.rel.del('expense', expense);
   }
 
-  delete(expense) {
-    return this._db.rel.del('expense', expense)
-      .then(res => console.log(res));
+  async refreshApp(refresher) {
+    await this.reloadChanges();
+    refresher.complete();
   }
 
-  refreshApp(refresher) {
-    this.reloadChanges()
-      .then(() => refresher.complete());
-  }
+  async reloadChanges() {
+    let expenses = await this.list();
+    let wrKey = WeekRange.getWeekRangeKey(new Date());
+    this.expenses = expenses.map((expense: Expense) => {
+      expense.date = new Date(expense.date);
+      expense.createdAt = new Date(expense.createdAt);
+      expense.updatedAt = new Date(expense.updatedAt);
+      return expense;
+    });
 
-  reloadChanges() {
-    return this.list()
-      .then(expenses => {
-        let wrKey = WeekRange.getWeekRangeKey(new Date());
-        this.expenses = expenses.map((expense: Expense) => {
-          expense.date = new Date(expense.date);
-          expense.createdAt = new Date(expense.createdAt);
-          expense.updatedAt = new Date(expense.updatedAt);
-          return expense;
-        });
+    this.currentWeekTotal = this.expenses.map(e => e.amount).reduce((a, b) => a + b, 0);
+    this.loadWeekRanges();
 
-        this.currentWeekTotal = this.expenses.map(e => e.amount).reduce((a, b) => a + b, 0);
-        this.loadWeekRanges();
-
-        let currentWeekExpenses = this.expenses.filter(e => e.weekRangeTag == wrKey);
-        this.dailyGroups = this.loadWeekExpenses(currentWeekExpenses);
-      });
+    let currentWeekExpenses = this.expenses.filter(e => e.weekRangeTag == wrKey);
+    this.dailyGroups = this.loadWeekExpenses(currentWeekExpenses);
   }
 
   loadWeekRanges() {
+    let wrFmt = 'MMM D';
     let weekRanges = {};
     this.expenses.map(expense => {
       let key = expense.weekRangeTag;
@@ -132,7 +172,7 @@ export class AubergineService {
           key: key,
           start: startStr.toDate(),
           end: endStr.toDate(),
-          name: `${startStr.format(this.wrFmt)} — ${endStr.format(this.wrFmt)}`,
+          name: `${startStr.format(wrFmt)} — ${endStr.format(wrFmt)}`,
           sum: expense.amount,
           expenseCount: 1,
         }
@@ -155,8 +195,7 @@ export class AubergineService {
       }
     });
     return Object.keys(dailyGroups)
-      .map(k => dailyGroups[k])
-      .reverse();
+      .map(k => dailyGroups[k]).reverse();
   }
 
 }

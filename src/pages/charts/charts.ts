@@ -4,9 +4,7 @@ import { Chart } from 'chart.js';
 import moment from 'moment';
 import hexRgb from 'hex-rgb';
 
-import { WeeklyExpenseListNav } from '../weekly-expense-list/weekly-expense-list';
 import { AubergineService } from '../../services/aubergine.service';
-import { WeekRange } from '../../models/week-range';
 
 @Component({
   selector: 'page-charts',
@@ -42,16 +40,16 @@ export class ChartsNav {
       let lastWeekRange = this.aubergineService.weekRanges[0];
       this.selectedWeek = lastWeekRange.key;
     }
-    let loading = this.loadingCtrl.create({
-      content: 'Loading your expenses...',
-      duration: 1000,
-    });
-    loading.present();
   }
 
   ionViewWillEnter() {
+    let loading = this.loadingCtrl.create({
+      content: 'Loading your expenses...',
+    });
+    loading.present();
     this.loadWeekChart();
     this.loadLastNDaysChart();
+    loading.dismiss();
   }
 
   goToSlide() {
@@ -103,7 +101,6 @@ export class ChartsNav {
   }
 
   createDoughnutChart(chartData, canvas) {
-    let dataSum = chartData.data.reduce((a, b) => a + b, 0);
     return new Chart(canvas.nativeElement, {
       type: 'doughnut',
       data: {

@@ -21,10 +21,6 @@ export class CustomizeOptionsNav {
     this.categories = ['Foods & Beverages', 'Mini Expenses', 'Personal & Clothing', 'Leisure'];
   }
 
-  goBack() {
-    this.navCtrl.pop();
-  }
-
   presentEditPrompt(settingType, value) {
     let alert = this.alertCtrl.create({
       title: 'Edit Category',

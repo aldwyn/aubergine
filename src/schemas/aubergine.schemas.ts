@@ -35,4 +35,8 @@ export const schemas: any[] = [
       }
     }
   },
+  {
+    singular: 'currencySymbol',
+    plural: 'currencySymbols',
+  },
 ];

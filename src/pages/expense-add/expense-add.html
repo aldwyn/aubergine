@@ -5,7 +5,7 @@
       <button [hidden]="!expense" ion-button icon-only margin-right (click)="presentDeletePrompt()">
         <ion-icon name="trash"></ion-icon>
       </button>
-      <button ion-button icon-only (click)="saveExpense()">
+      <button ion-button icon-only (click)="validateAndSaveExpense()">
         <ion-icon name="send"></ion-icon>
       </button>
     </ion-buttons>

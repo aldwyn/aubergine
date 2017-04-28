@@ -3,7 +3,6 @@ import {
   NavController,
   NavParams,
   AlertController,
-  LoadingController,
 } from 'ionic-angular';
 import moment from 'moment';
 
@@ -21,14 +20,9 @@ export class WeeklyExpenseListNav {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public loadingCtrl: LoadingController,
     public alertCtrl: AlertController,
     public aubergineService: AubergineService,
   ) { }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad WeeklyExpenseList');
-  }
 
   ionViewWillEnter() {
     let wrKey = this.navParams.get('weekRangeTag');

@@ -4,9 +4,7 @@ import { Chart } from 'chart.js';
 import moment from 'moment';
 import hexRgb from 'hex-rgb';
 
-import { WeeklyExpenseListNav } from '../weekly-expense-list/weekly-expense-list';
 import { AubergineService } from '../../services/aubergine.service';
-import { WeekRange } from '../../models/week-range';
 
 @Component({
   selector: 'page-trends',
@@ -27,17 +25,14 @@ export class TrendsNav {
     public aubergineService: AubergineService) {
   }
 
-  ionViewDidLoad() {
+  ionViewWillEnter() {
     let loading = this.loadingCtrl.create({
       content: 'Loading your expenses...',
-      duration: 1000,
     });
     loading.present();
-  }
-
-  ionViewWillEnter() {
     this.loadBudgetProximityTrends();
     this.loadMonthlyTrends();
+    loading.dismiss();
   }
 
   goToSlide() {
