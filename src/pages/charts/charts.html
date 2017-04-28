@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-navbar color="secondary">
+    <ion-title>
+      <ion-icon name="pie"></ion-icon>
+      Distributions
+    </ion-title>
+    <ion-buttons end>
+      <toolbar-chip></toolbar-chip>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-slides>
+    <ion-slide>
+      <ion-card>
+        <ion-card-header>
+          <h1>Weekly</h1>
+          <p>How much is on a week's plate?</p>
+        </ion-card-header>
+        <ion-card-content>
+          <canvas #weeklyDonutCanvas></canvas>
+        </ion-card-content>
+      </ion-card>
+      <ion-card>
+        <ion-item>
+          <ion-label>Week Range</ion-label>
+          <ion-select [(ngModel)]="selectedWeek" (ionChange)="loadWeekChart()">
+            <ion-option *ngFor="let wr of aubergineService.weekRanges" [selected]="selectedWeek == wr.key" [value]="wr.key">{{wr.name}}</ion-option>
+          </ion-select>
+        </ion-item>
+      </ion-card>
+    </ion-slide>
+    <ion-slide>
+      <ion-card>
+        <ion-card-header>
+          <h1>By Date Range</h1>
+          <p>How much have you been consuming for the past days/months?</p>
+        </ion-card-header>
+        <ion-card-content>
+          <canvas #nDaysDonutCanvas></canvas>
+        </ion-card-content>
+      </ion-card>
+      <ion-card>
+        <ion-item>
+          <ion-label>Criteria</ion-label>
+          <ion-select [(ngModel)]="selectedNDays" (ionChange)="loadLastNDaysChart()">
+            <ion-option *ngFor="let nDay of allowedNDays" [selected]="selectedNDays == nDay.days" [value]="nDay.days">{{nDay.name}}</ion-option>
+          </ion-select>
+        </ion-item>
+      </ion-card>
+    </ion-slide>
+  </ion-slides>
+</ion-content>

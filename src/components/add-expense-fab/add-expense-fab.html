@@ -1,0 +1,16 @@
+<ion-fab bottom right #fab>
+  <button ion-fab icon-only color="primary" (press)="addExpense(fab)">
+    <ion-icon name="more"></ion-icon>
+  </button>
+  <ion-fab-list side="top">
+    <button ion-fab color="secondary" (click)="addExpense(fab)">
+      <ion-icon name="pricetags"></ion-icon>
+    </button>
+    <button ion-fab color="secondary" (click)="goToChartsNav(fab)">
+      <ion-icon name="pie"></ion-icon>
+    </button>
+    <button ion-fab color="secondary" (click)="goToTrendsNav(fab)">
+      <ion-icon name="analytics"></ion-icon>
+    </button>
+  </ion-fab-list>
+</ion-fab>

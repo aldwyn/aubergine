@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-navbar color="secondary">
+    <ion-title>
+      <ion-icon name="trending-up"></ion-icon>
+      Trends
+    </ion-title>
+    <ion-buttons end>
+      <toolbar-chip></toolbar-chip>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-slides>
+    <ion-slide>
+      <h1>Proximity to Weekly Budget</h1>
+      <ion-item>
+        <canvas #budgetProxTrendCanvas height="400"></canvas>
+      </ion-item>
+    </ion-slide>
+    <ion-slide>
+      <h1>Monthly Trend</h1>
+      <ion-item>
+        <canvas #monthlyTrendCanvas height="400"></canvas>
+      </ion-item>
+    </ion-slide>
+  </ion-slides>
+</ion-content>

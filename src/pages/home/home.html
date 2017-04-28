@@ -2,7 +2,7 @@
   <ion-navbar color="primary">
     <ion-title>Aubergine</ion-title>
     <ion-buttons end>
-      <toolbar-chip (click)="goToGraphNav()"></toolbar-chip>
+      <toolbar-chip></toolbar-chip>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
@@ -11,7 +11,7 @@
   <ion-refresher (ionRefresh)="aubergineService.refreshApp($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <ion-card>
+  <ion-card (click)="goToWeeklyExpenses()">
     <ion-card-content color="light">
       <div text-center>
         <p>This week's spending is worth</p>
@@ -36,9 +36,5 @@
       <p>Well, who cares to monitor their spendings, right? <strong>Get started if you do!</strong></p>
     </ion-card-content>
   </ion-card>
-  <ion-fab bottom right>
-    <button ion-fab icon-only color="secondary" (click)="addExpense()">
-      <ion-icon name="pricetags"></ion-icon>
-    </button>
-  </ion-fab>
+  <add-expense-fab></add-expense-fab>
 </ion-content>

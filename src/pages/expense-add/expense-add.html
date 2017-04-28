@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-navbar color="primary">
+  <ion-navbar color="secondary">
     <ion-title>{{ expense ? 'Edit' : 'Add' }} Expense</ion-title>
     <ion-buttons end padding-right>
       <button [hidden]="!expense" ion-button icon-only margin-right (click)="presentDeletePrompt()">
@@ -18,12 +18,12 @@
       <ion-card-header>Details</ion-card-header>
       <ion-card-content>
         <ion-item>
-          <ion-icon name="ios-pricetags" color="primary" item-left></ion-icon>
+          <ion-icon name="pricetags" color="primary" item-left></ion-icon>
           <ion-label color="primary" stacked>Brief Note</ion-label>
           <ion-input formControlName="note" type="text" placeholder="Type here..."></ion-input>         
         </ion-item>
         <ion-item>
-          <ion-icon name="ios-cash" color="primary" item-left></ion-icon>
+          <ion-icon name="cash" color="primary" item-left></ion-icon>
           <ion-label color="primary" stacked>Amount</ion-label>
           <ion-input class="amount-input" formControlName="amount" type="number" min="0" clearOnEdit="true" placeholder="0.00"></ion-input>
         </ion-item>
@@ -34,21 +34,21 @@
       <ion-card-header>Other Details</ion-card-header>
       <ion-card-content>
         <ion-item>
-          <ion-icon name="ios-browsers-outline" color="primary" item-left></ion-icon>
+          <ion-icon name="browsers" color="primary" item-left></ion-icon>
           <ion-label color="primary">Category</ion-label>
           <ion-select formControlName="category">
             <ion-option *ngFor="let c of aubergineService.categories" [value]="c._id" [selected]="c._id == category">{{c.name}}</ion-option>
           </ion-select>
         </ion-item>
         <ion-item>
-          <ion-icon name="ios-card" color="primary" item-left></ion-icon>
+          <ion-icon name="card" color="primary" item-left></ion-icon>
           <ion-label color="primary">Payment Method</ion-label>
           <ion-select formControlName="paymentMethod">
             <ion-option *ngFor="let pm of aubergineService.paymentMethods" [value]="pm._id" [selected]="pm._id == paymentMethod">{{pm.name}}</ion-option>
           </ion-select>
         </ion-item>
         <ion-item>
-          <ion-icon name="ios-calendar-outline" color="primary" item-left></ion-icon>
+          <ion-icon name="calendar" color="primary" item-left></ion-icon>
           <ion-label color="primary">Date</ion-label>
           <ion-datetime formControlName="date" displayFormat="DDDD MMM D, YYYY" pickerFormat="MMM DD YYYY"></ion-datetime>
         </ion-item>

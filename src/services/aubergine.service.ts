@@ -23,10 +23,10 @@ export class AubergineService {
   categories: Category[];
   paymentMethods: PaymentMethod[];
 
-  // History trackers
   weekRanges: any[];
-  wrFmt: string = 'MMM D'
-  
+  wrFmt: string = 'MMM D';
+  weeklyBudget: number;
+
   // Home trackers
   dailyGroups: any[] = [];
   currentWeekExpenses: Expense[] = [];
@@ -47,6 +47,7 @@ export class AubergineService {
     this.categories = CATEGORIES;
     this.paymentMethods = PAYMENT_METHODS;
     this.currencySigns = CURRENCY_SYMBOLS;
+    this.weeklyBudget = 2000;
     this.initFixtures();
     this.listenToChanges();
   }
@@ -112,7 +113,6 @@ export class AubergineService {
         this.loadWeekRanges();
 
         let currentWeekExpenses = this.expenses.filter(e => e.weekRangeTag == wrKey);
-        this.loadCurrentWeekChartData(currentWeekExpenses);
         this.dailyGroups = this.loadWeekExpenses(currentWeekExpenses);
       });
   }
@@ -130,6 +130,8 @@ export class AubergineService {
           endStr = moment(wrStr[1]);
         weekRanges[key] = {
           key: key,
+          start: startStr.toDate(),
+          end: endStr.toDate(),
           name: `${startStr.format(this.wrFmt)} — ${endStr.format(this.wrFmt)}`,
           sum: expense.amount,
           expenseCount: 1,
@@ -155,31 +157,6 @@ export class AubergineService {
     return Object.keys(dailyGroups)
       .map(k => dailyGroups[k])
       .reverse();
-  }
-
-  loadCurrentWeekChartData(weekExpenses) {
-    let categoryDict = {};
-    weekExpenses.map(e => {
-      if (e.category in categoryDict) {
-        categoryDict[e.category] += e.amount;
-      } else {
-        categoryDict[e.category] = e.amount;
-      }
-    });
-
-    this.currentWeekChartData.labels = [];
-    this.currentWeekChartData.data = [];
-    this.currentWeekChartData.bgColors = [];
-    this.currentWeekChartData.hoverBgColors = [];
-    
-    for (let cKey in categoryDict) {
-      let cat = this.categories[parseInt(cKey) - 1];
-      let rgb = hexRgb(cat.color);
-      this.currentWeekChartData.labels.push(cat.name);
-      this.currentWeekChartData.data.push(categoryDict[cKey]);
-      this.currentWeekChartData.bgColors.push(cat.color);
-      this.currentWeekChartData.hoverBgColors.push(`rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.75)`);
-    }
   }
 
 }

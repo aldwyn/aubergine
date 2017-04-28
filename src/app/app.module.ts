@@ -14,7 +14,8 @@ import { TabsPage } from '../pages/tabs/tabs';
 
 // Navs
 import { ExpenseAddNav } from '../pages/expense-add/expense-add';
-import { GraphPageNav } from '../pages/graph/graph';
+import { TrendsNav } from '../pages/trends/trends';
+import { ChartsNav } from '../pages/charts/charts';
 import { WeeklyExpenseListNav } from '../pages/weekly-expense-list/weekly-expense-list';
 import { CustomizeOptionsNav } from '../pages/customize-options/customize-options';
 import { SendFeedbackNav } from '../pages/send-feedback/send-feedback';
@@ -22,6 +23,7 @@ import { AboutNav } from '../pages/about/about';
 
 // Page components
 import { ToolbarChip } from '../components/toolbar-chip/toolbar-chip';
+import { AddExpenseFab } from '../components/add-expense-fab/add-expense-fab';
 
 // Services
 import { StatusBar } from '@ionic-native/status-bar';
@@ -48,13 +50,15 @@ const customIonicSettings: any = {
     HistoryPage,
     SettingsPage,
     ExpenseAddNav,
-    GraphPageNav,
+    TrendsNav,
+    ChartsNav,
     WeeklyExpenseListNav,
     CustomizeOptionsNav,
     SendFeedbackNav,
     AboutNav,
     TabsPage,
     ToolbarChip,
+    AddExpenseFab,
   ],
   imports: [
     BrowserModule,
@@ -69,13 +73,15 @@ const customIonicSettings: any = {
     HistoryPage,
     SettingsPage,
     ExpenseAddNav,
-    GraphPageNav,
+    TrendsNav,
+    ChartsNav,
     WeeklyExpenseListNav,
     CustomizeOptionsNav,
     SendFeedbackNav,
     AboutNav,
     TabsPage,
     ToolbarChip,
+    AddExpenseFab,
   ],
   providers: [
     StatusBar,

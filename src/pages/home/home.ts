@@ -1,9 +1,6 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { Chart } from 'chart.js';
 
-import { ExpenseAddNav } from '../expense-add/expense-add';
-import { GraphPageNav } from '../graph/graph';
 import { WeeklyExpenseListNav } from '../weekly-expense-list/weekly-expense-list';
 import { AubergineService } from '../../services/aubergine.service';
 import { WeekRange } from '../../models/week-range';
@@ -23,13 +20,10 @@ export class HomePage implements OnInit {
     this.aubergineService.reloadChanges();
   }
 
-  addExpense() {
-    this.navCtrl.push(ExpenseAddNav);
-  }
-
-  goToGraphNav() {
-    console.log('ksjdksdf');
-    this.navCtrl.push(GraphPageNav);
+  goToWeeklyExpenses() {
+    this.navCtrl.push(WeeklyExpenseListNav, {
+      weekRangeTag: WeekRange.getWeekRangeKey(new Date())
+    });
   }
 
 }
