@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar color="primary">
-    <ion-title>{{headerTitle}}</ion-title>
+    <ion-title>{{ headerTitle ? headerTitle : 'Weekly Expenses'}}</ion-title>
     <ion-buttons end>
       <toolbar-chip></toolbar-chip>
     </ion-buttons>
@@ -24,9 +24,10 @@
       </ion-item>
     </ion-card>
   </ion-list>
-  <ion-fab bottom right>
-    <button ion-fab icon-only color="secondary" (click)="addExpense()">
-      <ion-icon name="pie"></ion-icon>
-    </button>
-  </ion-fab>
+  <ion-card [hidden]="aubergineService.weekRanges.length > 0">
+    <ion-card-content>
+      <h1>No expenses just yet.</h1>
+      <h2><strong>Care to add one? I mean, just add one!</strong></h2>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

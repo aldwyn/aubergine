@@ -35,10 +35,6 @@ export class WeeklyExpenseListNav {
     this.aubergineService.dailyGroups = this.aubergineService.loadWeekExpenses(expenses);
   }
 
-  addExpense() {
-    this.navCtrl.push(ExpenseAddNav);
-  }
-
   goToExpenseDetails(expense) {
     this.navCtrl.push(ExpenseAddNav, { expense: expense });
   }

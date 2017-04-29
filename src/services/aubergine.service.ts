@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import PouchDB from 'pouchdb';
-import pounchdbFind from 'pouchdb-find';
-import relationalPouch from 'relational-pouch';
+import RelationalPouchDBPlugin from 'relational-pouch';
 import moment from 'moment';
 
 import { schemas } from '../schemas/aubergine.schemas';
@@ -21,7 +20,7 @@ export class AubergineService {
   private _db;
   settings: AppSettings;
   expenses: Expense[] = [];
-  currencySigns: any[];
+  currencySymbols: any[];
   categories: Category[];
   paymentMethods: PaymentMethod[];
 
@@ -30,6 +29,7 @@ export class AubergineService {
 
   // Home trackers
   dailyGroups: any[] = [];
+  budgetStillHealthy: boolean = true;
   currentWeekExpenses: Expense[] = [];
   currentWeekTotal: number = 0;
   currentWeekChartData: any = {
@@ -40,98 +40,58 @@ export class AubergineService {
   };
 
   constructor(public storage: Storage) {
-    PouchDB.plugin(relationalPouch);
-    PouchDB.plugin(pounchdbFind);
+    PouchDB.plugin(RelationalPouchDBPlugin);
     window['PouchDB'] = PouchDB;
+    this.settings = new AppSettings();
     this._db = new PouchDB('aubergine.db', { adapter: 'websql' });
     this._db.setSchema(schemas);
-    this.settings = new AppSettings();
+    this._db.changes({ live: true, since: 'now', include_docs: true })
+      .on('change', (change) => this.reloadChanges());
+    
     this.categories = CATEGORIES;
     this.paymentMethods = PAYMENT_METHODS;
-    this.currencySigns = CURRENCY_SYMBOLS;
-    this.listenToChanges();
-    this.initFixtures();
-    this.initStorage();
+    this.currencySymbols = CURRENCY_SYMBOLS;
+    
+    this.loadFixtures('category', 'categories', CATEGORIES);
+    this.loadFixtures('paymentMethod', 'paymentMethods', PAYMENT_METHODS);
+    this.loadFixtures('currencySymbol', 'currencySymbols', CURRENCY_SYMBOLS);
+    this.loadSettings();
   }
 
-  initDatabase() {
+  private loadSettings() {
+    this.storage.ready().then(() => {
+      Object.keys(this.settings).map(async storageKey => {
+        let res = await this.storage.get(storageKey);
+        if (!res) {
+          await this.storage.set(storageKey, this.settings[storageKey]);
+        } else {
+          this.settings[storageKey] = res;
+        }
+      });
+    });
   }
 
-  async initStorage() {
-    await this.storage.ready();
-    let res = await this.storage.get('weeklyBudget');
-    if (!res) {
-      this.storage.set('weeklyBudget', this.settings.weeklyBudget);
-    } else {
-      this.settings.weeklyBudget = res;
+  private async loadFixtures(fixtureKey, fixtureLoad, fixtureList) {
+    this[fixtureLoad] = await this.list(fixtureKey);
+    if (this[fixtureLoad].length == 0) {
+      fixtureList.map(async fixtureInstance => {
+        await this.upsert(fixtureKey, fixtureInstance);
+      });
+      this[fixtureLoad] = await this.list(fixtureKey);
     }
   }
 
-  // private saveSettings() {
-  //   this.storage.ready().then(() => {
-  //     this._db.rel.find('category').then(res => {
-  //       console.log(res);
-  //       if (!res.categories) {
-  //         CATEGORIES.map(category => {
-  //           this._db.rel.save('category', category)
-  //             .then(r => {
-  //               if (r.categories[0].name == this.settings.category) {
-  //                 this.settings.category
-  //               }
-  //             });
-  //         });
-  //       }
-  //     });
-  //   });
-  // }
-
-  private initFixtures() {
-    // add categories if not yet in db
-    this._db.rel.find('category').then(res => {
-      if (!res.categories) {
-        console.log(res);
-        CATEGORIES.map(category => {
-          this._db.rel.save('category', category)
-            .then(r => {
-              // if (r.categories[0].name == ) {
-
-              // }
-            });
-        });
-      }
-    });
-    
-    // add payment methods if not yet in db
-    this._db.rel.find('paymentMethod').then(res => {
-      if (!res.paymentMethods) {
-        PAYMENT_METHODS.map(pm => this._db.rel.save('paymentMethod', pm));
-      }
-    });
-
-    // add currency symbols if not yet in db
-    this._db.rel.find('currencySymbol').then(res => {
-      if (!res.currencySymbols) {
-        CURRENCY_SYMBOLS.map(cs => this._db.rel.save('currencySymbol', cs));
-      }
-    });
+  async list(ddoc) {
+    let res = await this._db.rel.find(ddoc);
+    return res[Object.keys(res)[0]];
   }
 
-  private listenToChanges() {
-    this._db.changes({ live: true, since: 'now', include_docs: true })
-      .on('change', (change) => this.reloadChanges());
+  async upsert(ddoc, instance) {
+    await this._db.rel.save(ddoc, instance);
   }
 
-  async list() {
-    let res = await this._db.rel.find('expense');
-    return res.expenses as Expense[];
-  }
-
-  async upsert(expense) {
-    await this._db.rel.save('expense', expense);
-  }
-
-  async delete(expense) {
-    await this._db.rel.del('expense', expense);
+  async delete(ddoc, instance) {
+    await this._db.rel.del(ddoc, instance);
   }
 
   async refreshApp(refresher) {
@@ -140,7 +100,7 @@ export class AubergineService {
   }
 
   async reloadChanges() {
-    let expenses = await this.list();
+    let expenses = await this.list('expense');
     let wrKey = WeekRange.getWeekRangeKey(new Date());
     this.expenses = expenses.map((expense: Expense) => {
       expense.date = new Date(expense.date);
@@ -150,6 +110,7 @@ export class AubergineService {
     });
 
     this.currentWeekTotal = this.expenses.map(e => e.amount).reduce((a, b) => a + b, 0);
+    this.budgetStillHealthy = this.currentWeekTotal <= this.settings.weeklyBudget;
     this.loadWeekRanges();
 
     let currentWeekExpenses = this.expenses.filter(e => e.weekRangeTag == wrKey);

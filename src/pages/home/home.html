@@ -8,19 +8,19 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-refresher (ionRefresh)="aubergineService.refreshApp($event)">
+  <!-- <ion-refresher (ionRefresh)="aubergineService.refreshApp($event)">
     <ion-refresher-content></ion-refresher-content>
-  </ion-refresher>
-  <ion-card (click)="goToWeeklyExpenses()">
-    <ion-card-content color="light">
+  </ion-refresher> -->
+  <ion-card (click)="goToTrendsPageNav()">
+    <ion-card-content>
       <div text-center>
         <p>This week's spending is worth</p>
-        <h1 class="spending-total"><span [outerHTML]="aubergineService.currencySigns[25].htmlCode"></span> <span>{{aubergineService.currentWeekTotal | number:'1.2-2'}}</span></h1>
+        <h1 class="spending-total"><span [outerHTML]="aubergineService.settings.currencySymbol.htmlCode"></span> <span>{{aubergineService.currentWeekTotal | number:'1.2-2'}}</span></h1>
       </div>
       <div text-center>
         <ion-chip>
-          <ion-icon name="heart" color="secondary"></ion-icon>
-          <ion-label>Still on average</ion-label>
+          <ion-icon [name]="aubergineService.budgetStillHealthy ? 'heart' : 'alert'" [color]="aubergineService.budgetStillHealthy ? 'secondary' : 'danger'"></ion-icon>
+          <ion-label>{{ this.budgetStillHealthy ? 'Still cool, keep up!' : 'OMG! Stop spending!' }}</ion-label>
         </ion-chip>
       </div>
     </ion-card-content>
@@ -31,10 +31,12 @@
       <h1 class="getting-started-header">Glad you came!</h1>
     </ion-card-header>
     <ion-card-content>
-      <p>Add new expenses to see the weekly categorical distribution here.</p>
-      <p>This allows you to be aware about the expenses you might or might not want to have in the next weeks.</p>
       <p>Well, who cares to monitor their spendings, right? <strong>Get started if you do!</strong></p>
     </ion-card-content>
   </ion-card>
+  <button ion-button icon-right round color="secondary" (click)="goToWeeklyExpenses()">
+    Go to Weekly Expenses
+    <ion-icon name="arrow-forward"></ion-icon>
+  </button>
   <add-expense-fab></add-expense-fab>
 </ion-content>

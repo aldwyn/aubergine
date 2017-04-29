@@ -22,6 +22,12 @@
         <h1 item-right class="list-price">{{wr.sum | number:'1.2-2'}}</h1>
       </ion-item>
     </ion-card>
+    <ion-card [hidden]="aubergineService.weekRanges.length > 0">
+      <ion-card-content>
+        <h1>No expenses just yet.</h1>
+        <h2><strong>Care to add one? I mean, just add one!</strong></h2>
+      </ion-card-content>
+    </ion-card>
   </ion-list>
   <add-expense-fab></add-expense-fab>
 </ion-content>

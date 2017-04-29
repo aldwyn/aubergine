@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, LoadingController } from 'ionic-angular';
 
+import { TrendsNav } from '../trends/trends';
 import { WeeklyExpenseListNav } from '../weekly-expense-list/weekly-expense-list';
 import { AubergineService } from '../../services/aubergine.service';
 import { WeekRange } from '../../models/week-range';
@@ -30,6 +31,10 @@ export class HomePage {
     this.navCtrl.push(WeeklyExpenseListNav, {
       weekRangeTag: WeekRange.getWeekRangeKey(new Date())
     });
+  }
+
+  goToTrendsPageNav() {
+    this.navCtrl.push(TrendsNav);
   }
 
 }

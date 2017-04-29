@@ -1,8 +1,7 @@
-export class Category {
-  _id: number;
+export interface Category {
+  id: number;
   name: string;
   description: string;
-  enabled: boolean;
   color: string;
   rev: string;
 }

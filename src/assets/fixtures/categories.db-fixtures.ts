@@ -2,9 +2,8 @@ import { Category } from '../../models/category';
 
 export const CATEGORIES: Category[] = [
   {
-    _id: 1,
+    id: 1,
     name: 'Entertainment',
-    enabled: true,
     rev: null,
     color: '#d73838',
     description: `
@@ -15,9 +14,8 @@ export const CATEGORIES: Category[] = [
     `,
   },
   {
-    _id: 2,
+    id: 2,
     name: 'Education',
-    enabled: true,
     rev: null,
     color: '#dea23a',
     description: `
@@ -27,9 +25,8 @@ export const CATEGORIES: Category[] = [
     `,
   },
   {
-    _id: 3,
+    id: 3,
     name: 'Shopping',
-    enabled: true,
     rev: null,
     color: '#b1d149',
     description: `
@@ -41,9 +38,8 @@ export const CATEGORIES: Category[] = [
     `,
   },
   {
-    _id: 4,
+    id: 4,
     name: 'Personal Care',
-    enabled: true,
     rev: null,
     color: '#5d85b5',
     description: `
@@ -54,9 +50,8 @@ export const CATEGORIES: Category[] = [
     `,
   },
   {
-    _id: 5,
+    id: 5,
     name: 'Health & Fitness',
-    enabled: true,
     rev: null,
     color: '#9d56a4',
     description: `
@@ -70,9 +65,8 @@ export const CATEGORIES: Category[] = [
     `,
   },
   {
-    _id: 6,
+    id: 6,
     name: 'Kids',
-    enabled: true,
     rev: null,
     color: '#3d6413',
     description: `
@@ -85,9 +79,8 @@ export const CATEGORIES: Category[] = [
     `,
   },
   {
-    _id: 7,
+    id: 7,
     name: 'Food & Dining',
-    enabled: true,
     rev: null,
     color: '#c6bb1b',
     description: `
@@ -99,9 +92,8 @@ export const CATEGORIES: Category[] = [
     `,
   },
   {
-    _id: 8,
+    id: 8,
     name: 'Gifts & Donations',
-    enabled: true,
     rev: null,
     color: '#e0f048',
     description: `
@@ -110,9 +102,8 @@ export const CATEGORIES: Category[] = [
     `,
   },
   {
-    _id: 9,
+    id: 9,
     name: 'Investments',
-    enabled: true,
     rev: null,
     color: '#e20a0a',
     description: `
@@ -124,9 +115,8 @@ export const CATEGORIES: Category[] = [
     `,
   },
   {
-    _id: 10,
+    id: 10,
     name: 'Bills & Utilities',
-    enabled: true,
     rev: null,
     color: '#7b1414',
     description: `
@@ -138,9 +128,8 @@ export const CATEGORIES: Category[] = [
     `,
   },
   {
-    _id: 11,
+    id: 11,
     name: 'Auto & Transport',
-    enabled: true,
     rev: null,
     color: '#540000',
     description: `
@@ -153,9 +142,8 @@ export const CATEGORIES: Category[] = [
     `,
   },
   {
-    _id: 12,
+    id: 12,
     name: 'Travel',
-    enabled: true,
     rev: null,
     color: '#c98a10',
     description: `
@@ -166,9 +154,8 @@ export const CATEGORIES: Category[] = [
     `,
   },
   {
-    _id: 13,
+    id: 13,
     name: 'Fees & Charges',
-    enabled: true,
     rev: null,
     color: '#b83800',
     description: `
@@ -181,9 +168,8 @@ export const CATEGORIES: Category[] = [
     `,
   },
   {
-    _id: 14,
+    id: 14,
     name: 'Business & Services',
-    enabled: true,
     rev: null,
     color: '#c30000',
     description: `
@@ -195,9 +181,8 @@ export const CATEGORIES: Category[] = [
     `,
   },
   {
-    _id: 15,
+    id: 15,
     name: 'Taxes',
-    enabled: true,
     rev: null,
     color: '#b87900',
     description: `

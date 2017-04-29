@@ -37,14 +37,14 @@
           <ion-icon name="browsers" color="primary" item-left></ion-icon>
           <ion-label color="primary">Category</ion-label>
           <ion-select formControlName="category">
-            <ion-option *ngFor="let c of aubergineService.categories" [value]="c._id" [selected]="c._id == category">{{c.name}}</ion-option>
+            <ion-option *ngFor="let c of aubergineService.categories" [value]="c.id" [selected]="c.id == category">{{c.name}}</ion-option>
           </ion-select>
         </ion-item>
         <ion-item>
           <ion-icon name="card" color="primary" item-left></ion-icon>
           <ion-label color="primary">Payment Method</ion-label>
           <ion-select formControlName="paymentMethod">
-            <ion-option *ngFor="let pm of aubergineService.paymentMethods" [value]="pm._id" [selected]="pm._id == paymentMethod">{{pm.name}}</ion-option>
+            <ion-option *ngFor="let pm of aubergineService.paymentMethods" [value]="pm.id" [selected]="pm.id == paymentMethod">{{pm.name}}</ion-option>
           </ion-select>
         </ion-item>
         <ion-item>

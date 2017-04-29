@@ -82,7 +82,7 @@ export class ExpenseAddNav {
       content: 'Saving...',
     });
     loading.present();
-    await this.aubergineService.upsert(expense);
+    await this.aubergineService.upsert('expense', expense);
     loading.dismiss();
     this.navCtrl.pop();
     this.toastCtrl.create({
@@ -102,7 +102,7 @@ export class ExpenseAddNav {
       }, {
         text: 'Yes',
         handler: data => {
-          this.aubergineService.delete(this.expense);
+          this.aubergineService.delete('expense', this.expense);
           let loading = this.loadingCtrl.create({
             content: 'Please wait while the deletion is on process...',
             duration: 1500,

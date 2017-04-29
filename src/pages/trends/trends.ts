@@ -45,7 +45,7 @@ export class TrendsNav {
     let fromDate = moment(now).subtract(6, 'months');
     let weeklyExpenses = this.aubergineService.weekRanges
       .filter(wr => wr.start >= fromDate.toDate() || wr.end <= toDate.toDate())
-      .map(wr => ({ label: wr.name, amount: this.aubergineService.weeklyBudget - wr.sum }))
+      .map(wr => ({ label: wr.name, amount: this.aubergineService.settings.weeklyBudget - wr.sum }))
       .reverse();
     let chartData = {
       labels: weeklyExpenses.map(wr => wr.label),
