@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
+import { File as IonicFile } from '@ionic-native/file';
 import PouchDB from 'pouchdb';
 import RelationalPouchDBPlugin from 'relational-pouch';
 import moment from 'moment';
+import json2csv from 'json2csv';
 
-import { schemas } from '../schemas/aubergine.schemas';
-import { AppSettings } from '../app/app.settings';
+import { AubergineSchemas } from '../schemas/aubergine.schemas';
+import { JsonToCsvSchemaUtil } from '../schemas/json2csv.schemas';
+import { AppSettings, ExpenseHealth } from '../app/app.settings';
 import { CATEGORIES } from '../assets/fixtures/categories.db-fixtures';
 import { PAYMENT_METHODS } from '../assets/fixtures/payment-methods.db-fixtures';
 import { CURRENCY_SYMBOLS } from '../assets/fixtures/currency-symbols.db-fixtures';
@@ -29,7 +32,7 @@ export class AubergineService {
 
   // Home trackers
   dailyGroups: any[] = [];
-  budgetStillHealthy: boolean = true;
+  budgetHealth: any = {};
   currentWeekExpenses: Expense[] = [];
   currentWeekTotal: number = 0;
   currentWeekChartData: any = {
@@ -39,18 +42,14 @@ export class AubergineService {
     hoverBgColors: [],
   };
 
-  constructor(public storage: Storage) {
+  constructor(public storage: Storage, public file: IonicFile) {
     PouchDB.plugin(RelationalPouchDBPlugin);
     window['PouchDB'] = PouchDB;
     this.settings = new AppSettings();
     this._db = new PouchDB('aubergine.db', { adapter: 'websql' });
-    this._db.setSchema(schemas);
+    this._db.setSchema(AubergineSchemas);
     this._db.changes({ live: true, since: 'now', include_docs: true })
       .on('change', (change) => this.reloadChanges());
-    
-    this.categories = CATEGORIES;
-    this.paymentMethods = PAYMENT_METHODS;
-    this.currencySymbols = CURRENCY_SYMBOLS;
     
     this.loadFixtures('category', 'categories', CATEGORIES);
     this.loadFixtures('paymentMethod', 'paymentMethods', PAYMENT_METHODS);
@@ -99,6 +98,22 @@ export class AubergineService {
     refresher.complete();
   }
 
+  updateSetting(storageKey) {
+    this.storage.ready().then(async () => {
+      await this.storage.set(storageKey, this.settings[storageKey]);
+    });
+  }
+
+  exportToCsv() {
+    let csvData = json2csv({
+      data: this.expenses,
+      fields: JsonToCsvSchemaUtil.getSchema(this),
+    });
+    console.log(csvData);
+    return this.file.writeFile(
+      this.file.dataDirectory, 'aubergine-backup.csv', csvData, true);
+  }
+
   async reloadChanges() {
     let expenses = await this.list('expense');
     let wrKey = WeekRange.getWeekRangeKey(new Date());
@@ -110,7 +125,7 @@ export class AubergineService {
     });
 
     this.currentWeekTotal = this.expenses.map(e => e.amount).reduce((a, b) => a + b, 0);
-    this.budgetStillHealthy = this.currentWeekTotal <= this.settings.weeklyBudget;
+    this.budgetHealth = ExpenseHealth.monitorHealth(this.currentWeekTotal, this.settings.weeklyBudget);
     this.loadWeekRanges();
 
     let currentWeekExpenses = this.expenses.filter(e => e.weekRangeTag == wrKey);

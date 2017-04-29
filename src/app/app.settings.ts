@@ -34,3 +34,42 @@ export class AppSettings {
     rev: null,
   };
 }
+
+export class ExpenseHealth {
+  static health: any = {
+    zero: {
+      message: "Uhm you're not starting yet, I guess.",
+    },
+    supercool: {
+      message: "Yeah, you can spend more. :)",
+    },
+    cool: {
+      message: "Relax, you're still cool. Keep up.",
+    },
+    warning: {
+      message: "You're nearing danger. Tweak a little.",
+    },
+    danger: {
+      message: "OMG! Stop spending!",
+    },
+    exploit: {
+      message: "You have been exploiting! STOP.",
+    },
+  }
+
+  static monitorHealth(amount, weeklyBudget) {
+    if (amount == 0) {
+      return this.health['zero'];
+    } else if (amount > 0 && amount <= (0.2 * weeklyBudget)) {
+      return this.health['supercool'];
+    } else if (amount > (0.2 * weeklyBudget) && amount <= (0.5 * weeklyBudget)) {
+      return this.health['cool'];
+    } else if (amount > (0.5 * weeklyBudget) && amount <= (0.9 * weeklyBudget)) {
+      return this.health['warning'];
+    } else if (amount > (0.9 * weeklyBudget) && amount <= (1.25 * weeklyBudget)) {
+      return this.health['danger'];
+    } else {
+      return this.health['exploit'];
+    }
+  }
+}

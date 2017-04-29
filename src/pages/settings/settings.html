@@ -15,40 +15,47 @@
     <ion-list-header no-lines>General</ion-list-header>
     <ion-item>
       <ion-icon name="cloud-download" color="secondary" item-left></ion-icon>
-      <ion-label>Export to CSV</ion-label>
-      <button ion-button color="secondary" item-right>Export</button>
+      <ion-label color="dark">Export to CSV</ion-label>
+      <button ion-button color="secondary" item-right (click)="exportToCsv()">Export</button>
     </ion-item>
     <ion-item>
       <ion-icon name="alarm" color="secondary" item-left></ion-icon>
-      <ion-label>Daily Reminder</ion-label>
-      <ion-toggle checked="true" color="secondary"></ion-toggle>
+      <ion-label color="dark">Daily Reminder</ion-label>
+      <ion-toggle
+        [(ngModel)]="aubergineService.settings.dailyReminder"
+        (ionChange)="aubergineService.updateSetting('dailyReminder')"></ion-toggle>
     </ion-item>
     <ion-item>
       <ion-icon name="folder" color="secondary" item-left></ion-icon>
-      <ion-label>Automatic Backup</ion-label>
-      <ion-toggle checked="true" color="secondary"></ion-toggle>
+      <ion-label color="dark">Automatic Backup</ion-label>
+      <ion-toggle
+        [(ngModel)]="aubergineService.settings.automaticBackup"
+        (ionChange)="aubergineService.updateSetting('automaticBackup')"></ion-toggle>
     </ion-item>
     <ion-item>
-      <ion-icon name="book" color="secondary" item-left></ion-icon>
+      <ion-icon name="cash" color="secondary" item-left></ion-icon>
       <ion-label color="dark">Currency Symbol</ion-label>
-      <ion-select>
-        <ion-option value="goods" selected="true">Philippine Peso</ion-option>
-        <ion-option value="service">US Dollars</ion-option>
-        <ion-option value="payable">Malaysian Ringgit</ion-option>
+      <ion-select
+        (ionChange)="updateCurrencySymbol">
+        <ion-option
+          *ngFor="let cs of aubergineService.currencySymbols"
+          [selected]="cs.id == aubergineService.settings.currencySymbol.id">
+          <strong><span [outerHTML]="cs.htmlCode"></span></strong> ({{cs.name}})
+        </ion-option>
       </ion-select>
     </ion-item>
     <ion-item (click)="goToCustomzeOptions()">
       <ion-icon name="settings" color="secondary" item-left></ion-icon>
-      <ion-label>Customize Options</ion-label>
+      <ion-label color="dark">Customize Options</ion-label>
       <ion-icon name="arrow-forward" color="secondary" item-right></ion-icon>
     </ion-item>
     <ion-list-header no-lines>About</ion-list-header>
     <ion-item (click)="goToAbout()">
-      <ion-label>About App</ion-label>
+      <ion-label color="dark">About App</ion-label>
       <ion-icon name="arrow-forward" color="secondary" item-right></ion-icon> 
     </ion-item>
     <ion-item (click)="goToSendFeedback()">
-      <ion-label>Send Feedback</ion-label>
+      <ion-label color="dark">Send Feedback</ion-label>
       <ion-icon name="arrow-forward" color="secondary" item-right></ion-icon> 
     </ion-item>
   </ion-list>

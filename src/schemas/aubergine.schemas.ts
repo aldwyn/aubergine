@@ -1,4 +1,4 @@
-export const schemas: any[] = [
+export const AubergineSchemas: any[] = [
   {
     singular: 'expense',
     plural: 'expenses',

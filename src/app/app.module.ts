@@ -2,6 +2,7 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { IonicStorageModule } from '@ionic/storage';
+import { File as IonicFile } from '@ionic-native/file';
 import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
 import { Ng2LetterAvatar } from '../assets/lib/ng2letteravatar';
 import { MyApp } from './app.component';
@@ -84,6 +85,7 @@ const customIonicSettings: any = {
     AddExpenseFab,
   ],
   providers: [
+    IonicFile,
     StatusBar,
     SplashScreen,
     AubergineService,

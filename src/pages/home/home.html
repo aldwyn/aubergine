@@ -18,9 +18,11 @@
         <h1 class="spending-total"><span [outerHTML]="aubergineService.settings.currencySymbol.htmlCode"></span> <span>{{aubergineService.currentWeekTotal | number:'1.2-2'}}</span></h1>
       </div>
       <div text-center>
-        <ion-chip>
-          <ion-icon [name]="aubergineService.budgetStillHealthy ? 'heart' : 'alert'" [color]="aubergineService.budgetStillHealthy ? 'secondary' : 'danger'"></ion-icon>
-          <ion-label>{{ this.budgetStillHealthy ? 'Still cool, keep up!' : 'OMG! Stop spending!' }}</ion-label>
+        <ion-chip color="light">
+          <ion-icon name="medkit" color="primary"></ion-icon>
+          <ion-label>
+            <strong>{{ aubergineService.budgetHealth.message }}</strong>
+          </ion-label>
         </ion-chip>
       </div>
     </ion-card-content>
