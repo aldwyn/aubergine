@@ -4,6 +4,8 @@ import { CurrencySymbol } from '../models/currency-symbols';
 
 
 export class AppSettings {
+  id: number = 1;
+  rev: string = null;
   weeklyBudget: number = 2000;
   dailyReminder: boolean = false;
   automaticBackup: boolean = false;

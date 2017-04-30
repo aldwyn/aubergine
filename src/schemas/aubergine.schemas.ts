@@ -39,4 +39,8 @@ export const AubergineSchemas: any[] = [
     singular: 'currencySymbol',
     plural: 'currencySymbols',
   },
+  {
+    singular: 'appSettings',
+    plural: 'appSettings',
+  }
 ];

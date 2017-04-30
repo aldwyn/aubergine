@@ -64,7 +64,10 @@ const customIonicSettings: any = {
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp, customIonicSettings),
-    IonicStorageModule.forRoot(),
+    IonicStorageModule.forRoot({
+      name: '__mydb',
+      driverOrder: ['websql', 'indexeddb', 'sqlite']
+    }),
     CloudModule.forRoot(cloudSettings),
   ],
   bootstrap: [IonicApp],

@@ -18,6 +18,8 @@ import { Category } from '../models/category';
 import { PaymentMethod } from '../models/payment-method';
 import { WeekRange } from '../models/week-range';
 
+// declare var cordova: any
+
 @Injectable()
 export class AubergineService {
   private _db;
@@ -51,23 +53,25 @@ export class AubergineService {
     this._db.changes({ live: true, since: 'now', include_docs: true })
       .on('change', (change) => this.reloadChanges());
     
+    this.loadAllFixtures();
+    this.loadSettings();
+    this.reloadChanges();
+  }
+
+  async loadSettings() {
+    let res = await this.list('appSettings');
+    console.log(res);
+    if (res.length == 0) {
+      this.upsert('appSettings', this.settings);
+    } else {
+      this.settings = res[0];
+    }
+  }
+
+  private loadAllFixtures() {
     this.loadFixtures('category', 'categories', CATEGORIES);
     this.loadFixtures('paymentMethod', 'paymentMethods', PAYMENT_METHODS);
     this.loadFixtures('currencySymbol', 'currencySymbols', CURRENCY_SYMBOLS);
-    this.loadSettings();
-  }
-
-  private loadSettings() {
-    this.storage.ready().then(() => {
-      Object.keys(this.settings).map(async storageKey => {
-        let res = await this.storage.get(storageKey);
-        if (!res) {
-          await this.storage.set(storageKey, this.settings[storageKey]);
-        } else {
-          this.settings[storageKey] = res;
-        }
-      });
-    });
   }
 
   private async loadFixtures(fixtureKey, fixtureLoad, fixtureList) {
@@ -85,8 +89,9 @@ export class AubergineService {
     return res[Object.keys(res)[0]];
   }
 
-  async upsert(ddoc, instance) {
-    await this._db.rel.save(ddoc, instance);
+  upsert(ddoc, instance) {
+    return this._db.rel.save(ddoc, instance)
+      .catch(err => console.error(err));
   }
 
   async delete(ddoc, instance) {
@@ -98,10 +103,8 @@ export class AubergineService {
     refresher.complete();
   }
 
-  updateSetting(storageKey) {
-    this.storage.ready().then(async () => {
-      await this.storage.set(storageKey, this.settings[storageKey]);
-    });
+  updateSetting() {
+    this.upsert('appSettings', this.settings);
   }
 
   exportToCsv() {
@@ -114,7 +117,7 @@ export class AubergineService {
       this.file.dataDirectory, 'aubergine-backup.csv', csvData, true);
   }
 
-  async reloadChanges() {
+  async reloadChanges(): Promise<void> {
     let expenses = await this.list('expense');
     let wrKey = WeekRange.getWeekRangeKey(new Date());
     this.expenses = expenses.map((expense: Expense) => {

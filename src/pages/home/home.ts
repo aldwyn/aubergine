@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { NavController, LoadingController } from 'ionic-angular';
+import { NavController, LoadingController, Platform } from 'ionic-angular';
+import { Storage } from '@ionic/storage';
 
 import { TrendsNav } from '../trends/trends';
 import { WeeklyExpenseListNav } from '../weekly-expense-list/weekly-expense-list';
@@ -13,19 +14,12 @@ import { WeekRange } from '../../models/week-range';
 export class HomePage {
 
   constructor(
+    public platform: Platform,
+    public storage: Storage,
     public navCtrl: NavController,
     public loadingCtrl: LoadingController,
     public aubergineService: AubergineService,
   ) { }
-
-  async ngOnInit() {
-    let loading = this.loadingCtrl.create({
-      content: 'Loading your expenses...',
-    });
-    loading.present();
-    await this.aubergineService.reloadChanges();
-    loading.dismiss();
-  }
 
   goToWeeklyExpenses() {
     this.navCtrl.push(WeeklyExpenseListNav, {

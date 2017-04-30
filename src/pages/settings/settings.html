@@ -23,28 +23,30 @@
       <ion-label color="dark">Daily Reminder</ion-label>
       <ion-toggle
         [(ngModel)]="aubergineService.settings.dailyReminder"
-        (ionChange)="aubergineService.updateSetting('dailyReminder')"></ion-toggle>
+        (ionChange)="aubergineService.updateSetting()"></ion-toggle>
     </ion-item>
     <ion-item>
       <ion-icon name="folder" color="secondary" item-left></ion-icon>
       <ion-label color="dark">Automatic Backup</ion-label>
       <ion-toggle
         [(ngModel)]="aubergineService.settings.automaticBackup"
-        (ionChange)="aubergineService.updateSetting('automaticBackup')"></ion-toggle>
+        (ionChange)="aubergineService.updateSetting()"></ion-toggle>
     </ion-item>
     <ion-item>
       <ion-icon name="cash" color="secondary" item-left></ion-icon>
       <ion-label color="dark">Currency Symbol</ion-label>
       <ion-select
-        (ionChange)="updateCurrencySymbol">
+        [(ngModel)]="selectedCurrencySymbol"
+        (ionChange)="updateCurrencySymbol()">
         <ion-option
           *ngFor="let cs of aubergineService.currencySymbols"
-          [selected]="cs.id == aubergineService.settings.currencySymbol.id">
+          [selected]="cs.id == selectedCurrencySymbol"
+          [value]="cs.id">
           <strong><span [outerHTML]="cs.htmlCode"></span></strong> ({{cs.name}})
         </ion-option>
       </ion-select>
     </ion-item>
-    <ion-item (click)="goToCustomzeOptions()">
+    <ion-item (click)="goToCustomizeOptions()">
       <ion-icon name="settings" color="secondary" item-left></ion-icon>
       <ion-label color="dark">Customize Options</ion-label>
       <ion-icon name="arrow-forward" color="secondary" item-right></ion-icon>
