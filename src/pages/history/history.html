@@ -7,27 +7,32 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content padding scrollY="true">
   <ion-refresher (ionRefresh)="aubergineService.refreshApp($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <ion-list>
-    <ion-card *ngFor="let wr of aubergineService.weekRanges" (click)="openWeeklyExpenseList(wr.key)">
+    <ion-card *ngFor="let wr of weekRanges" (click)="openWeeklyExpenseList(wr.key)">
       <ion-item>
         <ion-avatar item-left>
-          <ng2-letter-avatar [avatar-data]="wr.name"></ng2-letter-avatar>
+          <ng2-letter-avatar [avatar-data]="wr.name || '?'"></ng2-letter-avatar>
         </ion-avatar>
         <h2 color="secondary">{{wr.name}}</h2>
         <p>{{wr.expenseCount}} expenses</p>
         <h1 item-right class="list-price">{{wr.sum | number:'1.2-2'}}</h1>
       </ion-item>
     </ion-card>
-    <ion-card [hidden]="aubergineService.weekRanges.length > 0">
+    <ion-card [hidden]="weekRanges.length > 0">
       <ion-card-content>
         <h1>No expenses just yet.</h1>
         <h2><strong>Care to add one? I mean, just add one!</strong></h2>
       </ion-card-content>
     </ion-card>
   </ion-list>
-  <add-expense-fab></add-expense-fab>
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Loading more week ranges..."> 
+    </ion-infinite-scroll-content>
+ </ion-infinite-scroll>
 </ion-content>

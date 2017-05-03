@@ -26,7 +26,7 @@
         <ion-item>
           <ion-label>Week Range</ion-label>
           <ion-select [(ngModel)]="selectedWeek" (ionChange)="loadWeekChart()">
-            <ion-option *ngFor="let wr of aubergineService.weekRanges" [selected]="selectedWeek == wr.key" [value]="wr.key">{{wr.name}}</ion-option>
+            <ion-option *ngFor="let wr of (aubergineService.weekRanges || [])" [selected]="selectedWeek == wr.key" [value]="wr.key">{{wr.name}}</ion-option>
           </ion-select>
         </ion-item>
       </ion-card>
@@ -45,7 +45,7 @@
         <ion-item>
           <ion-label>Criteria</ion-label>
           <ion-select [(ngModel)]="selectedNDays" (ionChange)="loadLastNDaysChart()">
-            <ion-option *ngFor="let nDay of allowedNDays" [selected]="selectedNDays == nDay.days" [value]="nDay.days">{{nDay.name}}</ion-option>
+            <ion-option *ngFor="let nDay of (allowedNDays || [])" [selected]="selectedNDays == nDay.days" [value]="nDay.days">{{nDay.name}}</ion-option>
           </ion-select>
         </ion-item>
       </ion-card>

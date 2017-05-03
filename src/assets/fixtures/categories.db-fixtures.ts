@@ -46,7 +46,6 @@ export const CATEGORIES: Category[] = [
       Laundry
       Hair
       Spa & Massage
-      Remove: Sports
     `,
   },
   {

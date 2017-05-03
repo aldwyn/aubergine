@@ -14,9 +14,14 @@
   <ion-list>
     <ion-list-header no-lines>General</ion-list-header>
     <ion-item>
-      <ion-icon name="cloud-download" color="secondary" item-left></ion-icon>
+      <ion-icon name="cloud-upload" color="secondary" item-left></ion-icon>
       <ion-label color="dark">Export to CSV</ion-label>
       <button ion-button color="secondary" item-right (click)="exportToCsv()">Export</button>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="cloud-download" color="secondary" item-left></ion-icon>
+      <ion-label color="dark">Import from CSV</ion-label>
+      <button ion-button color="secondary" item-right (click)="importFromCsv()">Import</button>
     </ion-item>
     <ion-item>
       <ion-icon name="alarm" color="secondary" item-left></ion-icon>

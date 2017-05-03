@@ -83,6 +83,7 @@ export class ExpenseAddNav {
     });
     loading.present();
     await this.aubergineService.upsert('expense', expense);
+    this.aubergineService.reloadChanges();
     loading.dismiss();
     this.navCtrl.pop();
     this.toastCtrl.create({
@@ -101,16 +102,14 @@ export class ExpenseAddNav {
         role: 'cancel',
       }, {
         text: 'Yes',
-        handler: data => {
-          this.aubergineService.delete('expense', this.expense);
-          let loading = this.loadingCtrl.create({
+        handler: async data => {
+          this.loadingCtrl.create({
             content: 'Please wait while the deletion is on process...',
             duration: 1500,
-          })
-          loading.onDidDismiss(() => {
-            this.navCtrl.pop();
-          });
-          loading.present();
+            dismissOnPageChange: true,
+          }).present();
+          await this.aubergineService.delete('expense', this.expense);
+          this.aubergineService.reloadChanges();
         }
       }],
     }).present();

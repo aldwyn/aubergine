@@ -1,13 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Storage } from '@ionic/storage';
 import { File as IonicFile } from '@ionic-native/file';
 import PouchDB from 'pouchdb';
 import RelationalPouchDBPlugin from 'relational-pouch';
 import moment from 'moment';
-import json2csv from 'json2csv';
 
 import { AubergineSchemas } from '../schemas/aubergine.schemas';
-import { JsonToCsvSchemaUtil } from '../schemas/json2csv.schemas';
 import { AppSettings, ExpenseHealth } from '../app/app.settings';
 import { CATEGORIES } from '../assets/fixtures/categories.db-fixtures';
 import { PAYMENT_METHODS } from '../assets/fixtures/payment-methods.db-fixtures';
@@ -44,14 +41,14 @@ export class AubergineService {
     hoverBgColors: [],
   };
 
-  constructor(public storage: Storage, public file: IonicFile) {
+  constructor(public file: IonicFile) {
     PouchDB.plugin(RelationalPouchDBPlugin);
     window['PouchDB'] = PouchDB;
     this.settings = new AppSettings();
     this._db = new PouchDB('aubergine.db', { adapter: 'websql' });
     this._db.setSchema(AubergineSchemas);
-    this._db.changes({ live: true, since: 'now', include_docs: true })
-      .on('change', (change) => this.reloadChanges());
+    // this._db.changes({ live: true, since: 'now', include_docs: true })
+    //   .on('change', (change) => this.reloadChanges());
     
     this.loadAllFixtures();
     this.loadSettings();
@@ -60,7 +57,6 @@ export class AubergineService {
 
   async loadSettings() {
     let res = await this.list('appSettings');
-    console.log(res);
     if (res.length == 0) {
       this.upsert('appSettings', this.settings);
     } else {
@@ -99,7 +95,7 @@ export class AubergineService {
   }
 
   async refreshApp(refresher) {
-    await this.reloadChanges();
+    this.reloadChanges();
     refresher.complete();
   }
 
@@ -107,17 +103,13 @@ export class AubergineService {
     this.upsert('appSettings', this.settings);
   }
 
-  exportToCsv() {
-    let csvData = json2csv({
-      data: this.expenses,
-      fields: JsonToCsvSchemaUtil.getSchema(this),
-    });
-    console.log(csvData);
-    return this.file.writeFile(
-      this.file.dataDirectory, 'aubergine-backup.csv', csvData, true);
+  loadExpenseDict() {
+    let expenseIds = {};
+    this.expenses.map(e => expenseIds[e.id] = null);
+    return expenseIds;
   }
 
-  async reloadChanges(): Promise<void> {
+  async reloadChanges() {
     let expenses = await this.list('expense');
     let wrKey = WeekRange.getWeekRangeKey(new Date());
     this.expenses = expenses.map((expense: Expense) => {
@@ -126,13 +118,11 @@ export class AubergineService {
       expense.updatedAt = new Date(expense.updatedAt);
       return expense;
     });
-
-    this.currentWeekTotal = this.expenses.map(e => e.amount).reduce((a, b) => a + b, 0);
-    this.budgetHealth = ExpenseHealth.monitorHealth(this.currentWeekTotal, this.settings.weeklyBudget);
-    this.loadWeekRanges();
-
     let currentWeekExpenses = this.expenses.filter(e => e.weekRangeTag == wrKey);
+    this.currentWeekTotal = currentWeekExpenses.map(e => e.amount).reduce((a, b) => a + b, 0);
+    this.budgetHealth = ExpenseHealth.monitorHealth(this.currentWeekTotal, this.settings.weeklyBudget);
     this.dailyGroups = this.loadWeekExpenses(currentWeekExpenses);
+    this.loadWeekRanges();
   }
 
   loadWeekRanges() {
@@ -158,6 +148,7 @@ export class AubergineService {
       }
     });
     this.weekRanges = Object.keys(weekRanges).map(k => weekRanges[k]);
+    this.weekRanges.sort((a, b) => b.start - a.start);
   }
 
   loadWeekExpenses(weekExpenses) {

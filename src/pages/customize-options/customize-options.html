@@ -11,33 +11,14 @@
   <ion-list>
     <ion-item-divider no-lines></ion-item-divider>
     <ion-list-header no-lines>Payment Methods</ion-list-header>
-    <ion-item-sliding *ngFor="let paymentMethod of paymentMethods">
-      <ion-item>{{paymentMethod}}</ion-item>
-      <ion-item-options side="right">
-        <button ion-button color="secondary">
-          <ion-icon name="ios-create"></ion-icon>
-          Edit
-        </button>
-        <button ion-button color="danger">
-          <ion-icon name="ios-trash"></ion-icon>
-          Delete
-        </button>
-      </ion-item-options>
-    </ion-item-sliding>
+    <ion-item *ngFor="let pm of aubergineService.paymentMethods">
+      {{pm.name}}
+    </ion-item>
     <ion-item-divider no-lines></ion-item-divider>
     <ion-list-header no-lines>Categories</ion-list-header>
-    <ion-item-sliding *ngFor="let category of categories">
-      <ion-item>{{category}}</ion-item>
-      <ion-item-options side="right">
-        <button ion-button color="secondary">
-          <ion-icon name="ios-create"></ion-icon>
-          Edit
-        </button>
-        <button ion-button color="danger">
-          <ion-icon name="ios-trash"></ion-icon>
-          Delete
-        </button>
-      </ion-item-options>
-    </ion-item-sliding>
+    <ion-item *ngFor="let c of aubergineService.categories" (click)="alertCategoryInfo(c)">
+      {{c.name}}
+      <ion-icon name="information-circle" color="secondary" item-right></ion-icon>
+    </ion-item>
   </ion-list>
 </ion-content>

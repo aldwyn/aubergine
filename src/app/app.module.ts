@@ -1,8 +1,9 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
-import { IonicStorageModule } from '@ionic/storage';
 import { File as IonicFile } from '@ionic-native/file';
+import { FileChooser } from '@ionic-native/file-chooser';
+import { FilePath } from '@ionic-native/file-path';
 import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
 import { Ng2LetterAvatar } from '../assets/lib/ng2letteravatar';
 import { MyApp } from './app.component';
@@ -64,10 +65,6 @@ const customIonicSettings: any = {
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp, customIonicSettings),
-    IonicStorageModule.forRoot({
-      name: '__mydb',
-      driverOrder: ['websql', 'indexeddb', 'sqlite']
-    }),
     CloudModule.forRoot(cloudSettings),
   ],
   bootstrap: [IonicApp],
@@ -89,6 +86,8 @@ const customIonicSettings: any = {
   ],
   providers: [
     IonicFile,
+    FilePath,
+    FileChooser,
     StatusBar,
     SplashScreen,
     AubergineService,

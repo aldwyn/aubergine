@@ -4,7 +4,6 @@ import {
   NavParams,
   AlertController,
 } from 'ionic-angular';
-import moment from 'moment';
 
 import { ExpenseAddNav } from '../expense-add/expense-add';
 import { AubergineService } from '../../services/aubergine.service';
@@ -25,14 +24,7 @@ export class WeeklyExpenseListNav {
   ) { }
 
   ionViewWillEnter() {
-    let wrKey = this.navParams.get('weekRangeTag');
-    let wrFmt = 'MMM D';
-    let wrStr = wrKey.split(':'),
-      startStr = moment(wrStr[0]),
-      endStr = moment(wrStr[1]);
-    this.headerTitle = `${startStr.format(wrFmt)} — ${endStr.format(wrFmt)}`;
-    let expenses = this.aubergineService.expenses.filter(e => e.weekRangeTag == wrKey);
-    this.aubergineService.dailyGroups = this.aubergineService.loadWeekExpenses(expenses);
+    this.headerTitle = this.navParams.get('headerTitle');
   }
 
   goToExpenseDetails(expense) {

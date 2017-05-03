@@ -13,7 +13,7 @@
     <ion-card *ngFor="let expense of dg.expenses" (click)="goToExpenseDetails(expense)">
       <ion-item>
         <ion-avatar item-left>
-          <ng2-letter-avatar [avatar-data]="expense.note == '' ? '??' : expense.note" avatar-char-count="2"></ng2-letter-avatar>
+          <ng2-letter-avatar [avatar-data]="expense.note || '??'" avatar-char-count="2"></ng2-letter-avatar>
         </ion-avatar>
         <h2>
           <span [hidden]="expense.note == ''">{{expense.note}}</span>
