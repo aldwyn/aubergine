@@ -8,6 +8,18 @@
 </ion-header>
 
 <ion-content padding>
+  <ion-fab bottom right #fab>
+    <button ion-fab color="primary" (click)="addExpense(fab)">
+      <ion-icon name="pricetags"></ion-icon>
+    </button>
+  </ion-fab>
+  <ion-refresher (ionRefresh)="aubergineService.refreshApp($event)">
+    <ion-refresher-content
+      pullingText="Pull to refresh"
+      refreshingSpinner="circles"
+      refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
   <ion-list *ngFor="let dg of aubergineService.dailyGroups">
     <ion-item-divider>{{dg.name}}</ion-item-divider>
     <ion-card *ngFor="let expense of dg.expenses" (click)="goToExpenseDetails(expense)">

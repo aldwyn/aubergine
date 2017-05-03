@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { NavController, NavParams, Slides, LoadingController } from 'ionic-angular';
+import { NavController, NavParams, Slides } from 'ionic-angular';
 import { Chart } from 'chart.js';
 import moment from 'moment';
 import hexRgb from 'hex-rgb';
@@ -31,7 +31,6 @@ export class ChartsNav {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public loadingCtrl: LoadingController,
     public aubergineService: AubergineService) {
   }
 
@@ -43,13 +42,8 @@ export class ChartsNav {
   }
 
   ionViewWillEnter() {
-    let loading = this.loadingCtrl.create({
-      content: 'Loading your expenses...',
-    });
-    loading.present();
     this.loadWeekChart();
     this.loadLastNDaysChart();
-    loading.dismiss();
   }
 
   goToSlide() {

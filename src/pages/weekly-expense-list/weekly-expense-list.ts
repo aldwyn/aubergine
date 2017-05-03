@@ -3,6 +3,7 @@ import {
   NavController,
   NavParams,
   AlertController,
+  FabContainer,
 } from 'ionic-angular';
 
 import { ExpenseAddNav } from '../expense-add/expense-add';
@@ -22,6 +23,11 @@ export class WeeklyExpenseListNav {
     public alertCtrl: AlertController,
     public aubergineService: AubergineService,
   ) { }
+
+  addExpense(fab: FabContainer) {
+    fab.close();
+    this.navCtrl.push(ExpenseAddNav);
+  }
 
   ionViewWillEnter() {
     this.headerTitle = this.navParams.get('headerTitle');

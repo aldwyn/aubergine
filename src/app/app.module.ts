@@ -25,7 +25,6 @@ import { AboutNav } from '../pages/about/about';
 
 // Page components
 import { ToolbarChip } from '../components/toolbar-chip/toolbar-chip';
-import { AddExpenseFab } from '../components/add-expense-fab/add-expense-fab';
 
 // Services
 import { StatusBar } from '@ionic-native/status-bar';
@@ -60,7 +59,6 @@ const customIonicSettings: any = {
     AboutNav,
     TabsPage,
     ToolbarChip,
-    AddExpenseFab,
   ],
   imports: [
     BrowserModule,
@@ -82,7 +80,6 @@ const customIonicSettings: any = {
     AboutNav,
     TabsPage,
     ToolbarChip,
-    AddExpenseFab,
   ],
   providers: [
     IonicFile,

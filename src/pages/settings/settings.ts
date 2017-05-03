@@ -72,7 +72,6 @@ export class SettingsPage {
               if (!e.weekRangeTag) {
                 e.weekRangeTag = WeekRange.getWeekRangeKey(e.date);
               }
-              console.log(e);
               await this.aubergineService.upsert('expense', e);
             });
             alert.setTitle('Success!');
@@ -121,6 +120,28 @@ export class SettingsPage {
         }
       });
     }
+  }
+
+  promptWeeklyBudgetChange() {
+    this.alertCtrl.create({
+      title: 'Change Weekly Budget',
+      inputs: [{
+        name: 'weeklyBudget',
+        placeholder: 'Enter amount...',
+        value: this.aubergineService.settings.weeklyBudget.toString(),
+        type: 'number',
+      }],
+      buttons: [{
+        text: 'Cancel',
+        role: 'cancel'
+      }, {
+        text: 'Change',
+        handler: data => {
+          this.aubergineService.settings.weeklyBudget = data.weeklyBudget;
+          this.aubergineService.updateSetting();
+        }
+      }]
+    }).present();
   }
 
   goToCustomizeOptions() {

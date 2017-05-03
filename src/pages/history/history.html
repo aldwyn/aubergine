@@ -8,8 +8,17 @@
 </ion-header>
 
 <ion-content padding scrollY="true">
+  <ion-fab bottom right #fab>
+    <button ion-fab color="primary" (click)="addExpense(fab)">
+      <ion-icon name="pricetags"></ion-icon>
+    </button>
+  </ion-fab>
   <ion-refresher (ionRefresh)="aubergineService.refreshApp($event)">
-    <ion-refresher-content></ion-refresher-content>
+    <ion-refresher-content
+      pullingText="Pull to refresh"
+      refreshingSpinner="circles"
+      refreshingText="Refreshing...">
+    </ion-refresher-content>
   </ion-refresher>
   <ion-list>
     <ion-card *ngFor="let wr of weekRanges" (click)="openWeeklyExpenseList(wr.key)">

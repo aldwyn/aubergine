@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, FabContainer } from 'ionic-angular';
 import moment from 'moment';
 
+import { ExpenseAddNav } from '../expense-add/expense-add';
 import { WeeklyExpenseListNav } from '../weekly-expense-list/weekly-expense-list';
 import { AubergineService } from '../../services/aubergine.service';
 
@@ -26,6 +27,11 @@ export class HistoryPage {
     this.infiniteScrollIndex += 10;
   }
 
+  addExpense(fab: FabContainer) {
+    fab.close();
+    this.navCtrl.push(ExpenseAddNav);
+  }
+
   openWeeklyExpenseList(weekRangeTag) {
     let wrFmt = 'MMM D';
     let wrStr = weekRangeTag.split(':'),
@@ -39,6 +45,7 @@ export class HistoryPage {
   }
 
   doInfinite(infiniteScroll) {
+    console.log('ksjdng');
     setTimeout(() => {
       this.aubergineService.weekRanges
         .slice(this.infiniteScrollIndex, this.infiniteScrollIndex + 10)

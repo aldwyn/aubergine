@@ -26,10 +26,7 @@ export class AubergineService {
   categories: Category[];
   paymentMethods: PaymentMethod[];
 
-  weekRanges: any[];
-  weeklyBudget: number;
-
-  // Home trackers
+  weekRanges: any[] = [];
   dailyGroups: any[] = [];
   budgetHealth: any = {};
   currentWeekExpenses: Expense[] = [];
@@ -47,9 +44,6 @@ export class AubergineService {
     this.settings = new AppSettings();
     this._db = new PouchDB('aubergine.db', { adapter: 'websql' });
     this._db.setSchema(AubergineSchemas);
-    // this._db.changes({ live: true, since: 'now', include_docs: true })
-    //   .on('change', (change) => this.reloadChanges());
-    
     this.loadAllFixtures();
     this.loadSettings();
     this.reloadChanges();
@@ -94,7 +88,7 @@ export class AubergineService {
     await this._db.rel.del(ddoc, instance);
   }
 
-  async refreshApp(refresher) {
+  refreshApp(refresher) {
     this.reloadChanges();
     refresher.complete();
   }
@@ -115,13 +109,12 @@ export class AubergineService {
     this.expenses = expenses.map((expense: Expense) => {
       expense.date = new Date(expense.date);
       expense.createdAt = new Date(expense.createdAt);
-      expense.updatedAt = new Date(expense.updatedAt);
+      expense.updatedAt = null;
       return expense;
     });
     let currentWeekExpenses = this.expenses.filter(e => e.weekRangeTag == wrKey);
     this.currentWeekTotal = currentWeekExpenses.map(e => e.amount).reduce((a, b) => a + b, 0);
     this.budgetHealth = ExpenseHealth.monitorHealth(this.currentWeekTotal, this.settings.weeklyBudget);
-    this.dailyGroups = this.loadWeekExpenses(currentWeekExpenses);
     this.loadWeekRanges();
   }
 
@@ -164,8 +157,12 @@ export class AubergineService {
         };
       }
     });
+
     return Object.keys(dailyGroups)
-      .map(k => dailyGroups[k]).reverse();
+      .map(k => {
+        dailyGroups[k].expenses.sort((a, b) => b.createdAt - a.createdAt);
+        return dailyGroups[k];
+      }).reverse();
   }
 
 }

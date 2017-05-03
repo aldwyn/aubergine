@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { NavController, NavParams, Slides, LoadingController } from 'ionic-angular';
+import { NavController, NavParams, Slides } from 'ionic-angular';
 import { Chart } from 'chart.js';
 import moment from 'moment';
 import hexRgb from 'hex-rgb';
@@ -21,18 +21,12 @@ export class TrendsNav {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public loadingCtrl: LoadingController,
     public aubergineService: AubergineService) {
   }
 
   ionViewWillEnter() {
-    let loading = this.loadingCtrl.create({
-      content: 'Loading your expenses...',
-    });
-    loading.present();
     this.loadBudgetProximityTrends();
     this.loadMonthlyTrends();
-    loading.dismiss();
   }
 
   goToSlide() {
@@ -57,19 +51,19 @@ export class TrendsNav {
   }
 
   loadMonthlyTrends() {
-    let now = new Date();
-    let toDate = moment(now);
-    let fromDate = moment(now).subtract(1, 'years');
     let monthlyExpenses = {};
+    let now = new Date();
+    let fromMomentDate = moment(now).subtract(11, 'months');
+    let fromDate = moment(new Date(fromMomentDate.year(), fromMomentDate.month(), 1)).toDate();
     moment.monthsShort().map((m, i) => monthlyExpenses[i] = { name: m, expenses: [] });
     this.aubergineService.expenses.map(e => {
-      if (e.date >= fromDate.toDate() && e.date <= toDate.toDate()) {
+      if (e.date >= fromDate && e.date <= now) {
         monthlyExpenses[e.date.getMonth()].expenses.push(e.amount);
       }
     });
     let mKeys = Object.keys(monthlyExpenses);
-    let sortedMonths = mKeys.slice(toDate.month() + 1, mKeys.length)
-      .concat(mKeys.slice(0, toDate.month() + 1));
+    let sortedMonths = mKeys.slice(now.getMonth() + 1, mKeys.length)
+      .concat(mKeys.slice(0, now.getMonth() + 1));
     let monthTrendsList = sortedMonths.map(k => monthlyExpenses[parseInt(k)]);
     let chartData = {
       labels: monthTrendsList.map(m => m.name),
